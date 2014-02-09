@@ -1,0 +1,5 @@
+U:\ComS437\DogePong\DogePong\DogePong\bin\x86\Release\DogePong.exe
+U:\ComS437\DogePong\DogePong\DogePong\bin\x86\Release\DogePong.pdb
+U:\ComS437\DogePong\DogePong\DogePong\obj\x86\Release\Microsoft.Xna.Framework.RuntimeProfile.txt
+U:\ComS437\DogePong\DogePong\DogePong\obj\x86\Release\DogePong.exe
+U:\ComS437\DogePong\DogePong\DogePong\obj\x86\Release\DogePong.pdb
