@@ -1,0 +1,1 @@
+This pong game was written in XNA and uses the Kinect library

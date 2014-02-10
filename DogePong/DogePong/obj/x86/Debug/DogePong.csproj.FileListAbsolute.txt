@@ -26,3 +26,17 @@ U:\ComS437\DogePong\DogePong\DogePong\bin\x86\Debug\Content\dogehead.xnb
 U:\ComS437\DogePong\DogePong\DogePong\bin\x86\Debug\Content\ComicSans.xnb
 U:\ComS437\DogePong\DogePong\DogePong\bin\x86\Debug\Content\ComicSansSmall.xnb
 U:\ComS437\DogePong\DogePong\DogePong\bin\x86\Debug\Content\ComicSansLarge.xnb
+C:\Users\turkycat\Google Drive\Source\XNA\DogePong\DogePong\DogePong\bin\x86\Debug\Content\dogeball.xnb
+C:\Users\turkycat\Google Drive\Source\XNA\DogePong\DogePong\DogePong\bin\x86\Debug\Content\dogepaddle_blue.xnb
+C:\Users\turkycat\Google Drive\Source\XNA\DogePong\DogePong\DogePong\bin\x86\Debug\Content\dogepaddle_red.xnb
+C:\Users\turkycat\Google Drive\Source\XNA\DogePong\DogePong\DogePong\bin\x86\Debug\Content\border.xnb
+C:\Users\turkycat\Google Drive\Source\XNA\DogePong\DogePong\DogePong\bin\x86\Debug\Content\dogehead.xnb
+C:\Users\turkycat\Google Drive\Source\XNA\DogePong\DogePong\DogePong\bin\x86\Debug\Content\ComicSans.xnb
+C:\Users\turkycat\Google Drive\Source\XNA\DogePong\DogePong\DogePong\bin\x86\Debug\Content\ComicSansSmall.xnb
+C:\Users\turkycat\Google Drive\Source\XNA\DogePong\DogePong\DogePong\bin\x86\Debug\Content\ComicSansLarge.xnb
+C:\Users\turkycat\Google Drive\Source\XNA\DogePong\DogePong\DogePong\bin\x86\Debug\DogePong.exe
+C:\Users\turkycat\Google Drive\Source\XNA\DogePong\DogePong\DogePong\bin\x86\Debug\DogePong.pdb
+C:\Users\turkycat\Google Drive\Source\XNA\DogePong\DogePong\DogePong\obj\x86\Debug\DogePong.csprojResolveAssemblyReference.cache
+C:\Users\turkycat\Google Drive\Source\XNA\DogePong\DogePong\DogePong\obj\x86\Debug\Microsoft.Xna.Framework.RuntimeProfile.txt
+C:\Users\turkycat\Google Drive\Source\XNA\DogePong\DogePong\DogePong\obj\x86\Debug\DogePong.exe
+C:\Users\turkycat\Google Drive\Source\XNA\DogePong\DogePong\DogePong\obj\x86\Debug\DogePong.pdb

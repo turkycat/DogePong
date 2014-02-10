@@ -6,7 +6,7 @@ using System.Text;
 
 namespace DogePong
 {
-    class Trajectory
+    public class Trajectory
     {
         public Vector2 currentPosition { get; set; }
         public Vector2 currentVelocity { get; set; }

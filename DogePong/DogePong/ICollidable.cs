@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework;
 
 namespace DogePong
 {
-    interface ICollidable
+    public interface ICollidable
     {
         /**
          * process the collision for both ICollidable objects

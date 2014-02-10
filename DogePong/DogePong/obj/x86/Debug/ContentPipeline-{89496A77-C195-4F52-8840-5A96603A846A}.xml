@@ -7,7 +7,7 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\turkycat\Google Drive\Source Files\XNA\DogePong\DogePong\DogePong\bin\x86\Debug\Content\dogeball.xnb</Output>
+      <Output>C:\Users\turkycat\Google Drive\Source\XNA\DogePong\DogePong\DogePong\bin\x86\Debug\Content\dogeball.xnb</Output>
       <Time>2014-02-07T13:40:49-06:00</Time>
     </Item>
     <Item>
@@ -16,7 +16,7 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\turkycat\Google Drive\Source Files\XNA\DogePong\DogePong\DogePong\bin\x86\Debug\Content\dogepaddle_blue.xnb</Output>
+      <Output>C:\Users\turkycat\Google Drive\Source\XNA\DogePong\DogePong\DogePong\bin\x86\Debug\Content\dogepaddle_blue.xnb</Output>
       <Time>2014-02-07T13:40:48-06:00</Time>
     </Item>
     <Item>
@@ -25,7 +25,7 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\turkycat\Google Drive\Source Files\XNA\DogePong\DogePong\DogePong\bin\x86\Debug\Content\dogepaddle_red.xnb</Output>
+      <Output>C:\Users\turkycat\Google Drive\Source\XNA\DogePong\DogePong\DogePong\bin\x86\Debug\Content\dogepaddle_red.xnb</Output>
       <Time>2014-02-07T13:40:48-06:00</Time>
     </Item>
     <Item>
@@ -34,7 +34,7 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\turkycat\Google Drive\Source Files\XNA\DogePong\DogePong\DogePong\bin\x86\Debug\Content\border.xnb</Output>
+      <Output>C:\Users\turkycat\Google Drive\Source\XNA\DogePong\DogePong\DogePong\bin\x86\Debug\Content\border.xnb</Output>
       <Time>2014-02-07T13:40:48-06:00</Time>
     </Item>
     <Item>
@@ -43,7 +43,7 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\turkycat\Google Drive\Source Files\XNA\DogePong\DogePong\DogePong\bin\x86\Debug\Content\dogehead.xnb</Output>
+      <Output>C:\Users\turkycat\Google Drive\Source\XNA\DogePong\DogePong\DogePong\bin\x86\Debug\Content\dogehead.xnb</Output>
       <Time>2014-02-07T13:40:47-06:00</Time>
     </Item>
     <Item>
@@ -52,7 +52,7 @@
       <Importer>FontDescriptionImporter</Importer>
       <Processor>FontDescriptionProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\turkycat\Google Drive\Source Files\XNA\DogePong\DogePong\DogePong\bin\x86\Debug\Content\ComicSans.xnb</Output>
+      <Output>C:\Users\turkycat\Google Drive\Source\XNA\DogePong\DogePong\DogePong\bin\x86\Debug\Content\ComicSans.xnb</Output>
       <Time>2014-02-07T13:40:48-06:00</Time>
     </Item>
     <Item>
@@ -61,7 +61,7 @@
       <Importer>FontDescriptionImporter</Importer>
       <Processor>FontDescriptionProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\turkycat\Google Drive\Source Files\XNA\DogePong\DogePong\DogePong\bin\x86\Debug\Content\ComicSansSmall.xnb</Output>
+      <Output>C:\Users\turkycat\Google Drive\Source\XNA\DogePong\DogePong\DogePong\bin\x86\Debug\Content\ComicSansSmall.xnb</Output>
       <Time>2014-02-07T13:40:48-06:00</Time>
     </Item>
     <Item>
@@ -70,7 +70,7 @@
       <Importer>FontDescriptionImporter</Importer>
       <Processor>FontDescriptionProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\turkycat\Google Drive\Source Files\XNA\DogePong\DogePong\DogePong\bin\x86\Debug\Content\ComicSansLarge.xnb</Output>
+      <Output>C:\Users\turkycat\Google Drive\Source\XNA\DogePong\DogePong\DogePong\bin\x86\Debug\Content\ComicSansLarge.xnb</Output>
       <Time>2014-02-07T13:40:47-06:00</Time>
     </Item>
     <BuildSuccessful>true</BuildSuccessful>
@@ -80,10 +80,10 @@
       <TargetProfile>Reach</TargetProfile>
       <BuildConfiguration>Debug</BuildConfiguration>
       <CompressContent>false</CompressContent>
-      <RootDirectory>C:\Users\turkycat\Google Drive\Source Files\XNA\DogePong\DogePong\DogePongContent\</RootDirectory>
-      <LoggerRootDirectory>C:\Users\turkycat\Google Drive\Source Files\XNA\DogePong\DogePong\DogePong\</LoggerRootDirectory>
-      <IntermediateDirectory>C:\Users\turkycat\Google Drive\Source Files\XNA\DogePong\DogePong\DogePong\obj\x86\Debug\</IntermediateDirectory>
-      <OutputDirectory>C:\Users\turkycat\Google Drive\Source Files\XNA\DogePong\DogePong\DogePong\bin\x86\Debug\Content\</OutputDirectory>
+      <RootDirectory>C:\Users\turkycat\Google Drive\Source\XNA\DogePong\DogePong\DogePongContent\</RootDirectory>
+      <LoggerRootDirectory>C:\Users\turkycat\Google Drive\Source\XNA\DogePong\DogePong\DogePong\</LoggerRootDirectory>
+      <IntermediateDirectory>C:\Users\turkycat\Google Drive\Source\XNA\DogePong\DogePong\DogePong\obj\x86\Debug\</IntermediateDirectory>
+      <OutputDirectory>C:\Users\turkycat\Google Drive\Source\XNA\DogePong\DogePong\DogePong\bin\x86\Debug\Content\</OutputDirectory>
     </Settings>
     <Assemblies>
       <Assembly>

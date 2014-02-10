@@ -10,49 +10,19 @@ namespace DogePong
 {
     class Player
     {
-        public PlayerIndex index;
+        public PlayerIndex index { get; private set; }
         public TextItem scoreText;
         public Paddle paddle;
+        public Controllers.Controller controller;
         private int points;
 
-        public Player( PlayerIndex index, Paddle paddle, TextItem scoreText )
+        public Player( Controllers.Controller controller, PlayerIndex index, Paddle paddle, TextItem scoreText )
         {
             this.points = 0;
-            this.index = index;
             this.paddle = paddle;
             this.scoreText = scoreText;
-        }
-
-
-        /**
-         * modifies the velocity of the given paddle based on the GamePadState
-         */
-        protected virtual void calculatePlayerInput()
-        {
-            GamePadState state = GamePad.GetState( index );
-            Trajectory trajectory = paddle.trajectory;
-
-            //allow the player to use either sticks.
-            float thumbstickValueLeft = -state.ThumbSticks.Left.Y;
-            float thumbstickValueRight = -state.ThumbSticks.Right.Y;
-            float thumbstickValue = ( thumbstickValueLeft == 0f ? thumbstickValueRight : thumbstickValueLeft );
-
-            //trajectory.currentVelocity.n
-            //if (thumbstickValue == 0f) trajectory.currentVelocity = new Vector2(trajectory.currentVelocity.X * 0.95f, trajectory.currentVelocity.Y * 0.95f);
-            float magnitude = trajectory.currentVelocity.Length();
-            if (thumbstickValue == 0f)
-            {
-                if (magnitude != 0)
-                {
-                    trajectory.currentVelocity = Vector2.Normalize(trajectory.currentVelocity) * (magnitude * .95f);
-                }
-            }
-            else
-            {
-                //clamp velocity [ -12, 12 ]
-                float yVelocity = Math.Max(-12f, Math.Min(12f, trajectory.currentVelocity.Y + (thumbstickValue * 0.3f)));
-                trajectory.currentVelocity = new Vector2(0f, yVelocity);
-            }
+            this.controller = controller;
+            this.index = index;
         }
 
 
@@ -62,17 +32,26 @@ namespace DogePong
          */
         public void calculatePlayerMovement()
         {
-            calculatePlayerInput();
-            paddle.calculateMovement();
+            controller.ProcessMove( paddle );
+            paddle.applyMovement();
+        }
+
+
+        /**
+         * sets the controller for this player, which will be used when calculating input
+         */
+        public void setController( Controllers.Controller controller )
+        {
+            this.controller = controller;
         }
 
 
         /**
          * determines if the input device is connected
          */
-        public bool isConnected()
+        public bool isGamePadConnected()
         {
-            GamePadState state = GamePad.GetState(index);
+            GamePadState state = GamePad.GetState( index );
             return state.IsConnected;
         }
 

@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework;
 
 namespace DogePong
 {
-    class Paddle : ICollidable
+    public class Paddle : ICollidable
     {
         public Trajectory trajectory;
         public Texture2D texture;
@@ -27,7 +27,7 @@ namespace DogePong
          * calculates the movement of a given paddle texture with a given trajectory.
          *   the paddle bounces off the bumpers as necessary, reversing it's velocity
          */
-        public void calculateMovement()
+        public void applyMovement()
         {
             float northBoundary = DogePong.northBoundary;
             float southBoundary = DogePong.southBoundary;

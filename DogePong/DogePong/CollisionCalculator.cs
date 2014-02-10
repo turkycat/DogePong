@@ -29,10 +29,8 @@ namespace DogePong
         /**
          * the main collision handling function. Will compute the next potential position of each ball, detect & process collisions based on the time of collision [ 0, 1 )
          */
-        public int calculate( DogeBall[] dogeBalls, int active )
+        public void calculate()
         {
-            if( active == 0 || dogeBalls == null ) return 0;
-
             //borrow references to paddles
             Paddle bluePaddle = blue.paddle;
             Paddle redPaddle = red.paddle;
@@ -40,50 +38,42 @@ namespace DogePong
             //borrow references to the trajectory
             Trajectory blueTrajectory = bluePaddle.trajectory;
             Trajectory redTrajectory = redPaddle.trajectory;
-
-            float radius = dogeBalls[0].radius;
-            float diameter = radius * 2f;
             
             //first, iterate through the balls, remove any deleted/invalid balls, and calculate their potential next positions.
-            for ( int i = 0; i < active; ++i )
+            for ( int i = 0; i < GameState.Instance.NumberOfBalls(); ++i )
             {
-                if ( dogeBalls[i] == null )
-                {
-                    swap( dogeBalls, i, active - 1 );
-                    --active;
-                    --i;
-                    continue;
-                }
+                DogeBall current = GameState.Instance.GetBall( i );
+                float radius = current.radius;
+                float diameter = radius * 2f;
 
                 //calculate the next position in the current ball's trajectory object using 100% of the current velocity.
-                dogeBalls[i].trajectory.calculateNextPosition( 1f );
+                current.trajectory.calculateNextPosition( 1f );
 
-                if ( !isValid( dogeBalls[i] ) )
+                if ( !isValid( current ) )
                 {
                     //if the ball has gone out of bounds
-                    dogeBalls[i] = null;
-                    swap( dogeBalls, i, active - 1 );
-                    --active;
+                    GameState.Instance.RemoveBall( i );
                     --i;
                     continue;
                 }
             }
 
+            int iterationCount = 0;
             float totalTime = 0f;
-            detectCollisions( dogeBalls, active );
+            detectCollisions();
             while ( totalTime < 1f && collisions.Count > 0 )
             {
+                iterationCount++;
                 totalTime = processCollisions();
-                detectCollisions( dogeBalls, active );
+                detectCollisions();
+                if ( iterationCount > 5 ) break;
             }
 
             //all collisions should be processed, and each ball's next position/velocity will have been properly set.
-            for ( int i = 0; i < active; ++i )
+            for ( int i = 0; i < GameState.Instance.NumberOfBalls(); ++i )
             {
-                dogeBalls[i].applyNextPosition();
+                GameState.Instance.GetBall(i).applyNextPosition();
             }
-
-            return active;
         }
 
 
@@ -94,7 +84,7 @@ namespace DogePong
         private bool isValid( DogeBall dogeBall )
         {
             Vector2 nextPosition = dogeBall.trajectory.nextPosition;
-            float width = DogeBall.texture.Width;
+            float width = dogeBall.radius * 2;
 
             if ( nextPosition.X + width < 0 )
             {
@@ -119,24 +109,27 @@ namespace DogePong
         /**
          * detects and creates collision events
          */
-        public void detectCollisions( DogeBall[] dogeBalls, int active )
+        public void detectCollisions()
         {
             //iterate through and detect collisions. There will never be a very large active number of balls, so an n^2 loop should suffice.
-            for ( int i = 0; i < active; ++i )
+            for ( int i = 0; i < GameState.Instance.NumberOfBalls(); ++i )
             {
-                detectWallAndPaddleCollisions( dogeBalls[i] );
+                DogeBall first = GameState.Instance.GetBall( i );
+                detectWallAndPaddleCollisions( first );
 
-                for ( int j = 0; j < active; ++j )
+                for ( int j = 0; j < GameState.Instance.NumberOfBalls(); ++j )
                 {
                     if ( i == j ) continue;
 
-                    Vector2 movement = dogeBalls[j].trajectory.currentVelocity - dogeBalls[i].trajectory.currentVelocity;
+                    DogeBall second = GameState.Instance.GetBall( j );
 
-                    Vector2 toOtherMidpoint = dogeBalls[j].midpoint - dogeBalls[i].midpoint;
-                    float distance = Vector2.Distance( dogeBalls[i].nextMidpoint, dogeBalls[j].nextMidpoint );
+                    Vector2 movement = second.trajectory.currentVelocity - first.trajectory.currentVelocity;
+
+                    Vector2 toOtherMidpoint = second.midpoint - first.midpoint;
+                    float distance = Vector2.Distance( first.nextMidpoint, second.nextMidpoint );
 
                     //if the combined movement vector's magnitude isn't great enough to cover the gap between the balls, they can't collide.
-                    float diameter = dogeBalls[i].radius * 2;
+                    float diameter = first.radius * 2;
                     float mag = movement.Length();
                     if ( movement.Length() < distance - diameter )
                     {
@@ -181,7 +174,7 @@ namespace DogePong
                     }
 
                     float collisionTime = newDistance / ( distance - diameter );
-                    CollisionEvent eve = new CollisionEvent( dogeBalls[i], dogeBalls[j], collisionTime );
+                    CollisionEvent eve = new CollisionEvent( first, second, collisionTime );
                     if( !collisions.Contains( eve ) )
                         collisions.Add( eve );
                 }
@@ -361,12 +354,6 @@ namespace DogePong
 
 
 
-        private void swap( DogeBall[] balls, int i, int j )
-        {
-            DogeBall temp = balls[i];
-            balls[i] = balls[j];
-            balls[j] = temp;
-        }
 
         private class CollisionEvent : IComparable
         {

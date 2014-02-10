@@ -74,10 +74,14 @@
   <ItemGroup>
     <Compile Include="Boundary.cs" />
     <Compile Include="CollisionCalculator.cs" />
-    <Compile Include="ComputerPlayer.cs" />
+    <Compile Include="Controllers\Controller.cs" />
+    <Compile Include="Controllers\ComputerController.cs" />
+    <Compile Include="Controllers\GamePadController.cs" />
+    <Compile Include="Controllers\Kinect.cs" />
     <Compile Include="DogeBall.cs" />
-    <Compile Include="GameProperties.cs" />
+    <Compile Include="GameState.cs" />
     <Compile Include="ICollidable.cs" />
+    <Compile Include="Controllers\IController.cs" />
     <Compile Include="Paddle.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

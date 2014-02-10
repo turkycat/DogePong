@@ -11,14 +11,7 @@ using Microsoft.Xna.Framework.Media;
 
 namespace DogePong
 {
-    public enum State
-    {
-        MENU,
-        PLAYING,
-        PAUSED,
-        END
-    };
-
+    using Controllers;
     public enum MenuItem
     {
         SINGLE,
@@ -38,21 +31,10 @@ namespace DogePong
         public static float southBoundary;
 
         //private bool gameOver = false;
-        private State state = State.MENU;
         private MenuItem selected;
 
         static GraphicsDeviceManager graphics;
         static SpriteBatch spriteBatch;
-
-        //font used for writing
-        static SpriteFont largefont;
-        static SpriteFont smallfont;
-        static SpriteFont regularfont;
-
-        //basic game textures
-        static Texture2D border;
-        static Texture2D ball_texture;
-        static Texture2D doge_head;
 
         //players
         Player blue;
@@ -68,9 +50,6 @@ namespace DogePong
         //a list of the text sprites
         List<TextItem> textList;
 
-        //array for balls
-        private DogeBall[] dogeBalls;
-
         //collision calculator used to handle the correct collision timings.
         private CollisionCalculator calculator;
 
@@ -78,7 +57,7 @@ namespace DogePong
         private ButtonState pauseButtonState = ButtonState.Released;
         private int players = 1;
         private Vector2 neutralSpawningPoint;
-        private int activeBalls = 0;
+        //private int activeBalls = 0;
         private long elapsedTime;
         private Color currentBackgroundColor;
 
@@ -124,20 +103,27 @@ namespace DogePong
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch( GraphicsDevice );
 
-            //initialize font
-            smallfont = Content.Load<SpriteFont>( "ComicSansSmall" );
-            regularfont = Content.Load<SpriteFont>( "ComicSans" );
-            largefont = Content.Load<SpriteFont>( "ComicSansLarge" );
+            //initialize fonts and textures (again, credit to using the singleton class as a texture dictionary goes to James Boddie)
+            Texture2D blueTexture = Content.Load<Texture2D>( "dogepaddle_blue" );
+            Texture2D redTexture = Content.Load<Texture2D>( "dogepaddle_red" );
+            GameState.Instance.addTexture( "bluepaddle", blueTexture );
+            GameState.Instance.addTexture( "redpaddle", redTexture );
+            GameState.Instance.addTexture( "border", Content.Load<Texture2D>( "border" ) );
+            GameState.Instance.addTexture( "dogehead", Content.Load<Texture2D>( "dogehead" ) );
+            GameState.Instance.addTexture( "dogeball", Content.Load<Texture2D>( "dogeball" ) );
+
+
+            GameState.Instance.addFont( "small", Content.Load<SpriteFont>( "ComicSansSmall" ) );
+            GameState.Instance.addFont( "regular", Content.Load<SpriteFont>( "ComicSans" ) );
+            GameState.Instance.addFont( "large", Content.Load<SpriteFont>( "ComicSansLarge" ) );
 
             textList = new List<TextItem>();
-            blueScore = new TextItem( "0", regularfont, new Vector2( 680f, 15f ), Color.White, 0 ); ;
-            redScore = new TextItem( "0", regularfont, new Vector2( 900f, 15f ), Color.White, 0 );
+            blueScore = new TextItem( "0", GameState.Instance.getFont( "regular" ), new Vector2( 680f, 15f ), Color.White, 0 ); ;
+            redScore = new TextItem( "0", GameState.Instance.getFont( "regular" ), new Vector2( 900f, 15f ), Color.White, 0 );
             textList.Add( blueScore );
             textList.Add( redScore );
 
-            //initialize border Texture
-            border = Content.Load<Texture2D>( "border" );
-            doge_head = Content.Load<Texture2D>( "dogehead" );
+            //choose an initial background
             randomizeBackground();
 
             float areaHeight = graphics.GraphicsDevice.Viewport.Height;
@@ -146,10 +132,6 @@ namespace DogePong
             Boundary gameBoundary = new Boundary( BOUNDARY_DENSITY, areaHeight, areaWidth );
 
             //--------------initialize paddles & their players
-
-            //initialize paddle Textures
-            Texture2D blueTexture = Content.Load<Texture2D>( "dogepaddle_blue" );
-            Texture2D redTexture = Content.Load<Texture2D>( "dogepaddle_red" );
 
             //initialize player paddle positions to the middle of the screen
             Vector2 bluePosition = new Vector2( BOUNDARY_DENSITY + blueTexture.Width, ( areaHeight - blueTexture.Height ) / 2.0f );
@@ -163,30 +145,27 @@ namespace DogePong
             bluePaddle = new Paddle( blueTrajectory, blueTexture );
             redPaddle = new Paddle( redTrajectory, redTexture );
 
+            //initialize a player and a computer player for starters
+            Controller blueController = new GamePadController( PlayerIndex.One );
+            Controller redController = new ComputerController();
+
             //initialize players
-            blue = new Player( PlayerIndex.One, bluePaddle, blueScore );
-            red = new Player( PlayerIndex.Two, redPaddle, redScore );
+            blue = new Player( blueController, PlayerIndex.One, bluePaddle, blueScore );
+            red = new Player( redController, PlayerIndex.Two, redPaddle, redScore );
             //red = new Player( PlayerIndex.One, redPaddle, redScore );
 
             //initialize collision engine
             calculator = new CollisionCalculator( gameBoundary, blue, red );
 
-            //--------------initialize balls
-
-            //initialize ball texture
-            ball_texture = Content.Load<Texture2D>( "dogeball" );
-
-            //initialize ball array
-            dogeBalls = new DogeBall[ MAX_BALLS ];
+            //--------------initialize a ball
 
             //initialize first ball with a position directly in the middle of the screen
-            float centerBallWidth = ( graphics.GraphicsDevice.Viewport.Width - ball_texture.Width ) / 2.0f;
-            float centerBallHeight = ( graphics.GraphicsDevice.Viewport.Height - ball_texture.Height ) / 2.0f;
+            float centerBallWidth = ( graphics.GraphicsDevice.Viewport.Width - GameState.Instance.getTexture( "dogeball" ).Width ) / 2.0f;
+            float centerBallHeight = ( graphics.GraphicsDevice.Viewport.Height - GameState.Instance.getTexture( "dogeball" ).Height ) / 2.0f;
             neutralSpawningPoint = new Vector2( centerBallWidth, centerBallHeight );
 
             //spawn the initial ball
-            spawnBall( neutralSpawningPoint );
-            
+            GameState.Instance.spawnBall( neutralSpawningPoint );
         }
 
         /// <summary>
@@ -231,7 +210,7 @@ namespace DogePong
             }
 
             // handle events that occur in the menu state
-            if ( state == State.MENU )
+            if ( GameState.Instance.State == State.MENU )
             {
                 //primitive menu item selection, but works for now... while I only have two menu items
                 if ( playerOne.ThumbSticks.Left.Y < 0f ) selected = MenuItem.MULTI;
@@ -246,33 +225,34 @@ namespace DogePong
                         if (playerTwo.IsConnected)
                         {
                             players = 2;
-                            state = State.PLAYING;
+                            red.setController( new GamePadController( PlayerIndex.Two ) );
+                            GameState.Instance.State = State.PLAYING;
                         }
                     }
                     else
                     {
-                        state = State.PLAYING;
+                        GameState.Instance.State = State.PLAYING;
                         players = 1;
-                        red = new ComputerPlayer( dogeBalls, PlayerIndex.Two, red.paddle, red.scoreText );
+                        //red = new ComputerPlayer( PlayerIndex.Two, red.paddle, red.scoreText );
                     }
                 }
             }
 
-            else if (state == State.PLAYING)
+            else if ( GameState.Instance.State == State.PLAYING )
             {
 
                 blue.calculatePlayerMovement();
                 red.calculatePlayerMovement();
 
-                activeBalls = calculator.calculate(dogeBalls, activeBalls);
+                calculator.calculate();
 
                 if (blue.Score() >= POINTS_TO_WIN || red.Score() >= POINTS_TO_WIN)
                 {
-                    state = State.END;
+                    GameState.Instance.State = State.END;
                 }
-                else if (activeBalls == 0)
+                else if (GameState.Instance.NumberOfBalls() == 0)
                 {
-                    spawnBall(neutralSpawningPoint);
+                    GameState.Instance.spawnBall( neutralSpawningPoint );
                 }
             }
 
@@ -295,10 +275,10 @@ namespace DogePong
 
             spriteBatch.Begin( SpriteSortMode.BackToFront, BlendState.AlphaBlend );
 
-            spriteBatch.Draw(border, new Vector2(), null, Color.White, 0f, new Vector2(), 1f, SpriteEffects.None, 1f);
+            spriteBatch.Draw( GameState.Instance.getTexture( "border" ), new Vector2(), null, Color.White, 0f, new Vector2(), 1f, SpriteEffects.None, 1f );
             //spriteBatch.Draw( border, new Vector2( 0, 0 ), Color.White );
 
-            if ( state == State.MENU )
+            if ( GameState.Instance.State == State.MENU )
             {
                 drawMenu( spriteBatch );
             }
@@ -323,28 +303,27 @@ namespace DogePong
             }
 
             //we have additional special draw commands that need to be handled when the game is over or paused
-            if ( state == State.END )
+            if ( GameState.Instance.State == State.END )
             {
-                spriteBatch.DrawString( largefont, "so game over", new Vector2( 700, 300 ), Color.White );
+                spriteBatch.DrawString( GameState.Instance.getFont( "large" ), "so game over", new Vector2( 700, 300 ), Color.White );
             }
-            else if (state == State.PAUSED)
+            else if (GameState.Instance.State == State.PAUSED)
             {
-                spriteBatch.DrawString(largefont, "so paus", new Vector2(300, 300), Color.Snow, -.3f, new Vector2(), 1f, SpriteEffects.None, 0f);
-                spriteBatch.DrawString(largefont, "wow", new Vector2(1000, 250), Color.Snow, .6f, new Vector2(), 1f, SpriteEffects.None, 0f);
-                spriteBatch.Draw(doge_head, new Vector2(640, 250), null, Color.White, .6f, new Vector2(), 1.0f, SpriteEffects.None, 0f);
+                spriteBatch.DrawString( GameState.Instance.getFont( "large" ), "so paus", new Vector2( 300, 300 ), Color.Snow, -.3f, new Vector2(), 1f, SpriteEffects.None, 0f );
+                spriteBatch.DrawString( GameState.Instance.getFont( "large" ), "wow", new Vector2( 1000, 250 ), Color.Snow, .6f, new Vector2(), 1f, SpriteEffects.None, 0f );
+                spriteBatch.Draw(GameState.Instance.getTexture( "dogehead" ), new Vector2(640, 250), null, Color.White, .6f, new Vector2(), 1.0f, SpriteEffects.None, 0f);
             }
 
             //only draw the balls if the game is playing
-            if ( state == State.PLAYING )
+            if ( GameState.Instance.State == State.PLAYING )
             {
                 //draw all of the active balls
-                float radius = DogeBall.texture.Width / 2f;
-                Vector2 midpoint = new Vector2( radius, radius );
-                for ( int i = 0; i < activeBalls; ++i )
+                Texture2D texture = GameState.Instance.getTexture( "dogeball" );
+                for ( int i = 0; i < GameState.Instance.NumberOfBalls(); ++i )
                 {
-                    //float rotation = gameTime.TotalGameTime.Milliseconds / 500;
-                    //rotation = rotation % ( MathHelper.Pi * 2 );
-                    spriteBatch.Draw( DogeBall.texture, dogeBalls[i].trajectory.currentPosition + midpoint, null, Color.White, dogeBalls[i].rotation, midpoint, 1.0f, SpriteEffects.None, 0f );
+                    DogeBall current = GameState.Instance.GetBall( i );
+                    Vector2 relativeMidpoint = new Vector2( current.radius, current.radius );
+                    spriteBatch.Draw( texture, current.trajectory.currentPosition + relativeMidpoint, null, Color.White, current.rotation, relativeMidpoint, 1.0f, SpriteEffects.None, 0f );
                 }
             }
             spriteBatch.End();
@@ -369,13 +348,13 @@ namespace DogePong
             if (pauseButtonState == ButtonState.Released)
             {
                 pauseButtonState = ButtonState.Pressed;
-                if (state == State.PLAYING)
+                if ( GameState.Instance.State == State.PLAYING )
                 {
-                    state = State.PAUSED;
+                    GameState.Instance.State = State.PAUSED;
                 }
-                else if (state == State.PAUSED)
+                else if ( GameState.Instance.State == State.PAUSED )
                 {
-                    state = State.PLAYING;
+                    GameState.Instance.State = State.PLAYING;
                     long currentSeconds = (long)gameTime.TotalGameTime.TotalSeconds;
                 }
             }
@@ -393,36 +372,21 @@ namespace DogePong
         {
             Color first = currentBackgroundColor == Color.Firebrick ? Color.Snow : Color.Firebrick;
             Color second = currentBackgroundColor == Color.Indigo ? Color.Snow : Color.Indigo;
-            spriteBatch.DrawString(largefont, "uno doge", new Vector2(620, 350), first, 0f, new Vector2(), 1f, SpriteEffects.None, .1f );
-            spriteBatch.DrawString( largefont, "dos doges", new Vector2( 600, 450 ), second, 0f, new Vector2(), 1f, SpriteEffects.None, .1f );
+            spriteBatch.DrawString( GameState.Instance.getFont("large"), "uno doge", new Vector2( 620, 350 ), first, 0f, new Vector2(), 1f, SpriteEffects.None, .1f );
+            spriteBatch.DrawString( GameState.Instance.getFont( "large" ), "dos doges", new Vector2( 600, 450 ), second, 0f, new Vector2(), 1f, SpriteEffects.None, .1f );
 
-            if (selected == MenuItem.MULTI && !red.isConnected())
+            if (selected == MenuItem.MULTI && !red.isGamePadConnected())
             {
-                spriteBatch.DrawString(largefont, "no wai", new Vector2(650, 520), Color.Ivory, -.6f, new Vector2(), 1f, SpriteEffects.None, 0f);
+                spriteBatch.DrawString( GameState.Instance.getFont( "large" ), "no wai", new Vector2( 650, 520 ), Color.Ivory, -.6f, new Vector2(), 1f, SpriteEffects.None, 0f );
             }
 
             Vector2 firstPosition = new Vector2( 530, 385 );
             Vector2 secondPosition = new Vector2( 530, 485 );
-            spriteBatch.Draw( DogeBall.texture, ( selected == MenuItem.SINGLE ? firstPosition : secondPosition ), Color.White );
+            spriteBatch.Draw( GameState.Instance.getTexture("dogeball"), ( selected == MenuItem.SINGLE ? firstPosition : secondPosition ), Color.White );
 
-            spriteBatch.Draw( doge_head, new Vector2( 840, 250 ), null, Color.White, -.6f, new Vector2(), 1.0f, SpriteEffects.None, 0f );
-            spriteBatch.DrawString( largefont, "wow", new Vector2( 300, 200 ), Color.Snow, -.4f, new Vector2(), 1f, SpriteEffects.None, 0f );
-            spriteBatch.DrawString( largefont, "such choice", new Vector2( 400, 500 ), Color.Red, .6f, new Vector2(), 1f, SpriteEffects.None, 0f );
-        }
-
-
-
-
-        /**
-         * spawns a ball with an initial position and velocity
-         */
-        public void spawnBall( Vector2 position )
-        {
-            if ( activeBalls == MAX_BALLS ) return;
-            Random rnd = new Random();
-            int coin = rnd.Next() % 2;
-            Vector2 ballVelocity = ( coin == 1 ? new Vector2( -5.0f, 0.0f ) : new Vector2( 5.0f, 0.0f ) );
-            dogeBalls[activeBalls++] = new DogeBall( ball_texture, new Trajectory( position, ballVelocity ) );
+            spriteBatch.Draw( GameState.Instance.getTexture( "dogehead" ), new Vector2( 840, 250 ), null, Color.White, -.6f, new Vector2(), 1.0f, SpriteEffects.None, 0f );
+            spriteBatch.DrawString( GameState.Instance.getFont( "large" ), "wow", new Vector2( 300, 200 ), Color.Snow, -.4f, new Vector2(), 1f, SpriteEffects.None, 0f );
+            spriteBatch.DrawString( GameState.Instance.getFont( "large" ), "such choice", new Vector2( 400, 500 ), Color.Red, .6f, new Vector2(), 1f, SpriteEffects.None, 0f );
         }
 
 
@@ -486,15 +450,15 @@ namespace DogePong
                 }
             }
 
-            SpriteFont font = regularfont;
+            SpriteFont font = GameState.Instance.getFont( "regular" );
             randy = rnd.Next( 3 );
             switch( randy )
             {
-                case 0: font = smallfont;
+                case 0: font = GameState.Instance.getFont( "small" );
                     break;
-                case 1: font = regularfont;
+                case 1: font = GameState.Instance.getFont( "regular" );
                     break;
-                case 2: font = largefont;
+                case 2: font = GameState.Instance.getFont( "large" );
                     break;
             }
 
@@ -516,7 +480,7 @@ namespace DogePong
          */
         public void randomlyCreateEvents( GameTime gameTime )
         {
-            if ( state == State.MENU || state == State.END ) return;
+            if ( GameState.Instance.State == State.MENU || GameState.Instance.State == State.END ) return;
             long currentSeconds = (long) gameTime.TotalGameTime.TotalSeconds;
             if ( currentSeconds > elapsedTime )
             {
@@ -531,7 +495,7 @@ namespace DogePong
                 //create a new ball every 8 seconds
                 if ( elapsedTime % 8 == 0 )
                 {
-                    spawnBall( neutralSpawningPoint );
+                    GameState.Instance.spawnBall( neutralSpawningPoint );
                 }
 
                 //create a new text item every second

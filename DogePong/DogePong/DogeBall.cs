@@ -7,9 +7,9 @@ using System.Text;
 
 namespace DogePong
 {
-    class DogeBall : ICollidable
+    public class DogeBall : ICollidable
     {
-        public static Texture2D texture { get; set; }
+        //public static Texture2D texture { get; set; }
         public Trajectory trajectory;
 
         private float elapsedTime;
@@ -34,18 +34,22 @@ namespace DogePong
 
         public float radius { get; set; }
 
+
+
+#region Constructors
+
         //public DogeBall( Texture2D image, Vector2 position ) : this( image, position, new Vector2( 0.0f, 0.0f ) ) { }
 
-        public DogeBall( Texture2D image, Trajectory trajectory )
+        public DogeBall( Trajectory trajectory )
         {
-            texture = image;
-
             this.elapsedTime = 0f;
             this.trajectory = ( trajectory == null ? new Trajectory() : trajectory );
             this.rotation = 0f;
             this.rotationVelocity = 0f;
-            this.radius = image.Width / 2;
+            this.radius = GameState.Instance.getTexture("dogeball").Width / 2f;
         }
+
+#endregion
 
 
         /**

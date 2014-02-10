@@ -1,2 +1,3 @@
 U:\ComS437\DogePong\DogePong\DogePongContent\obj\x86\Debug\DogePongContent.contentprojResolveAssemblyReference.cache
 C:\Users\turkycat\Google Drive\Source Files\XNA\DogePong\DogePong\DogePongContent\obj\x86\Debug\DogePongContent.contentprojResolveAssemblyReference.cache
+C:\Users\turkycat\Google Drive\Source\XNA\DogePong\DogePong\DogePongContent\obj\x86\Debug\DogePongContent.contentprojResolveAssemblyReference.cache
