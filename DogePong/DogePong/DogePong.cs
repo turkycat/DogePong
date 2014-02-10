@@ -12,6 +12,8 @@ using Microsoft.Xna.Framework.Media;
 namespace DogePong
 {
     using Controllers;
+    using Colliders;
+
     public enum MenuItem
     {
         SINGLE,
@@ -57,7 +59,6 @@ namespace DogePong
         private ButtonState pauseButtonState = ButtonState.Released;
         private int players = 1;
         private Vector2 neutralSpawningPoint;
-        //private int activeBalls = 0;
         private long elapsedTime;
         private Color currentBackgroundColor;
 
@@ -111,6 +112,7 @@ namespace DogePong
             GameState.Instance.addTexture( "border", Content.Load<Texture2D>( "border" ) );
             GameState.Instance.addTexture( "dogehead", Content.Load<Texture2D>( "dogehead" ) );
             GameState.Instance.addTexture( "dogeball", Content.Load<Texture2D>( "dogeball" ) );
+            GameState.Instance.addTexture( "blackhole", Content.Load<Texture2D>( "blackhole" ) );
 
 
             GameState.Instance.addFont( "small", Content.Load<SpriteFont>( "ComicSansSmall" ) );
@@ -126,8 +128,10 @@ namespace DogePong
             //choose an initial background
             randomizeBackground();
 
-            float areaHeight = graphics.GraphicsDevice.Viewport.Height;
-            float areaWidth = graphics.GraphicsDevice.Viewport.Width;
+            int areaHeight = graphics.GraphicsDevice.Viewport.Height;
+            int areaWidth = graphics.GraphicsDevice.Viewport.Width;
+            GameState.Instance.GameHeight = areaHeight;
+            GameState.Instance.GameWidth = areaWidth;
 
             Boundary gameBoundary = new Boundary( BOUNDARY_DENSITY, areaHeight, areaWidth );
 
@@ -147,7 +151,8 @@ namespace DogePong
 
             //initialize a player and a computer player for starters
             Controller blueController = new GamePadController( PlayerIndex.One );
-            Controller redController = new ComputerController();
+            Controller redController = new GamePadController( PlayerIndex.One );
+            //Controller redController = new ComputerController();
 
             //initialize players
             blue = new Player( blueController, PlayerIndex.One, bluePaddle, blueScore );
@@ -163,6 +168,10 @@ namespace DogePong
             float centerBallWidth = ( graphics.GraphicsDevice.Viewport.Width - GameState.Instance.getTexture( "dogeball" ).Width ) / 2.0f;
             float centerBallHeight = ( graphics.GraphicsDevice.Viewport.Height - GameState.Instance.getTexture( "dogeball" ).Height ) / 2.0f;
             neutralSpawningPoint = new Vector2( centerBallWidth, centerBallHeight );
+
+
+            Kinect kin = new Kinect( blue, red );
+            kin.init();
 
             //spawn the initial ball
             GameState.Instance.spawnBall( neutralSpawningPoint );
@@ -192,9 +201,15 @@ namespace DogePong
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update( GameTime gameTime )
         {
+            GameState.Instance.totalMillis = gameTime.TotalGameTime.TotalMilliseconds;
             //define the north and south walls, for more sensible collision detection code
             northBoundary = BOUNDARY_DENSITY;
             southBoundary = ( graphics.GraphicsDevice.Viewport.Height - BOUNDARY_DENSITY );
+
+            if ( GameState.Instance.State == State.PLAYING )
+            {
+                randomlyCreateEvents( gameTime );
+            }
 
             GamePadState playerOne = GamePad.GetState( PlayerIndex.One );
             GamePadState playerTwo = GamePad.GetState( PlayerIndex.Two );
@@ -275,8 +290,12 @@ namespace DogePong
 
             spriteBatch.Begin( SpriteSortMode.BackToFront, BlendState.AlphaBlend );
 
-            spriteBatch.Draw( GameState.Instance.getTexture( "border" ), new Vector2(), null, Color.White, 0f, new Vector2(), 1f, SpriteEffects.None, 1f );
+            spriteBatch.Draw( GameState.Instance.getTexture( "border" ), Vector2.Zero, null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 1f );
             //spriteBatch.Draw( border, new Vector2( 0, 0 ), Color.White );
+
+            BlackHole[] holes = GameState.Instance.getBlackHoles();
+            spriteBatch.Draw( GameState.Instance.getTexture( "blackhole" ), holes[0].trajectory.currentPosition, null, Color.White, holes[0].rotation, new Vector2( holes[0].radius, holes[0].radius ), 1f, SpriteEffects.None, 0.5f );
+            spriteBatch.Draw( GameState.Instance.getTexture( "blackhole" ), holes[1].trajectory.currentPosition, null, Color.White, holes[1].rotation, new Vector2( holes[1].radius, holes[1].radius ), 1f, SpriteEffects.None, 0.5f );
 
             if ( GameState.Instance.State == State.MENU )
             {
@@ -286,11 +305,9 @@ namespace DogePong
             //we will still continue to process events and draw paddles & text items while the game is in any other state besides menu
             else
             {
-                randomlyCreateEvents( gameTime );
-
                 //draw paddles
                 spriteBatch.Draw( bluePaddle.texture, bluePaddle.trajectory.currentPosition, null, Color.White, 0f, new Vector2( bluePaddle.texture.Width, 0f ), 1.0f, SpriteEffects.None, 0f );
-                spriteBatch.Draw( redPaddle.texture, redPaddle.trajectory.currentPosition, null, Color.White, 0f, new Vector2( 0f, 0f ), 1.0f, SpriteEffects.None, 0f );
+                spriteBatch.Draw( redPaddle.texture, redPaddle.trajectory.currentPosition, null, Color.White, 0f, Vector2.Zero, 1.0f, SpriteEffects.None, 0f );
 
                 for ( int i = 0; i < textList.Count; ++i )
                 {
@@ -305,13 +322,13 @@ namespace DogePong
             //we have additional special draw commands that need to be handled when the game is over or paused
             if ( GameState.Instance.State == State.END )
             {
-                spriteBatch.DrawString( GameState.Instance.getFont( "large" ), "so game over", new Vector2( 700, 300 ), Color.White );
+                spriteBatch.DrawString( GameState.Instance.getFont( "large" ), "many game overs", new Vector2( 700, 300 ), Color.White );
             }
             else if (GameState.Instance.State == State.PAUSED)
             {
-                spriteBatch.DrawString( GameState.Instance.getFont( "large" ), "so paus", new Vector2( 300, 300 ), Color.Snow, -.3f, new Vector2(), 1f, SpriteEffects.None, 0f );
-                spriteBatch.DrawString( GameState.Instance.getFont( "large" ), "wow", new Vector2( 1000, 250 ), Color.Snow, .6f, new Vector2(), 1f, SpriteEffects.None, 0f );
-                spriteBatch.Draw(GameState.Instance.getTexture( "dogehead" ), new Vector2(640, 250), null, Color.White, .6f, new Vector2(), 1.0f, SpriteEffects.None, 0f);
+                spriteBatch.DrawString( GameState.Instance.getFont( "large" ), "so paus", new Vector2( 300, 300 ), Color.Snow, -.3f, Vector2.Zero, 1f, SpriteEffects.None, 0f );
+                spriteBatch.DrawString( GameState.Instance.getFont( "large" ), "wow", new Vector2( 1000, 250 ), Color.Snow, .6f, Vector2.Zero, 1f, SpriteEffects.None, 0f );
+                spriteBatch.Draw( GameState.Instance.getTexture( "dogehead" ), new Vector2( 640, 250 ), null, Color.White, .6f, Vector2.Zero, 1.0f, SpriteEffects.None, 0f );
             }
 
             //only draw the balls if the game is playing
@@ -480,8 +497,8 @@ namespace DogePong
          */
         public void randomlyCreateEvents( GameTime gameTime )
         {
-            if ( GameState.Instance.State == State.MENU || GameState.Instance.State == State.END ) return;
             long currentSeconds = (long) gameTime.TotalGameTime.TotalSeconds;
+            if ( GameState.Instance.State == State.MENU || GameState.Instance.State == State.END ) return;
             if ( currentSeconds > elapsedTime )
             {
                 elapsedTime = currentSeconds;
@@ -493,7 +510,7 @@ namespace DogePong
                 }
 
                 //create a new ball every 8 seconds
-                if ( elapsedTime % 8 == 0 )
+                if ( elapsedTime % 10 == 0 )
                 {
                     GameState.Instance.spawnBall( neutralSpawningPoint );
                 }

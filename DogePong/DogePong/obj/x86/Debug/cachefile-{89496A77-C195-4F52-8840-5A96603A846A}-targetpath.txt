@@ -6,3 +6,4 @@ Content\dogehead.xnb
 Content\ComicSans.xnb
 Content\ComicSansSmall.xnb
 Content\ComicSansLarge.xnb
+Content\BlackHole.xnb

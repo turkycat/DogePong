@@ -31,6 +31,10 @@ namespace DogePong
          */
         public void calculate()
         {
+            BlackHole[] holes = GameState.Instance.getBlackHoles();
+            holes[0].calculateMovementPotential();
+            holes[1].calculateMovementPotential();
+
             //borrow references to paddles
             Paddle bluePaddle = blue.paddle;
             Paddle redPaddle = red.paddle;
@@ -46,8 +50,19 @@ namespace DogePong
                 float radius = current.radius;
                 float diameter = radius * 2f;
 
+                if ( holes[0].gravity( current ) )
+                {
+                    current.teleport( new Vector2( holes[1].getTrajectory().currentPosition.X - current.radius, holes[1].getTrajectory().currentPosition.Y - current.radius ) );
+                    continue;
+                }
+                if( holes[1].gravity( current ) )
+                {
+                    current.teleport( new Vector2( holes[0].midpoint.X - current.radius, holes[0].midpoint.Y - current.radius ) );
+                    continue;
+                }
+
                 //calculate the next position in the current ball's trajectory object using 100% of the current velocity.
-                current.trajectory.calculateNextPosition( 1f );
+                else current.calculateMovementPotential();
 
                 if ( !isValid( current ) )
                 {
@@ -74,6 +89,9 @@ namespace DogePong
             {
                 GameState.Instance.GetBall(i).applyNextPosition();
             }
+
+            holes[0].applyNextPosition();
+            holes[1].applyNextPosition();
         }
 
 
@@ -107,7 +125,7 @@ namespace DogePong
 
 
         /**
-         * detects and creates collision events
+         * detects and creates collision events between all collidable objects
          */
         public void detectCollisions()
         {
@@ -371,7 +389,14 @@ namespace DogePong
             public float processCollision()
             {
                 if ( first == null || second == null ) return 0f;
+
+                //first, instruct both objects to bring themselves up to the point of collision
                 first.collide( second, collisionTime );
+                second.collide( first, collisionTime );
+
+                first.reflect( second.getNormal( first ) );
+                second.reflect( first.getNormal( second ) );
+
                 return collisionTime;
             }
 

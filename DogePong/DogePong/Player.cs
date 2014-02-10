@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework.GamerServices;
 
 namespace DogePong
 {
-    class Player
+    public class Player
     {
         public PlayerIndex index { get; private set; }
         public TextItem scoreText;

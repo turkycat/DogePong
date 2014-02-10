@@ -73,6 +73,15 @@
       <Output>C:\Users\turkycat\Google Drive\Source\XNA\DogePong\DogePong\DogePong\bin\x86\Debug\Content\ComicSansLarge.xnb</Output>
       <Time>2014-02-07T13:40:47-06:00</Time>
     </Item>
+    <Item>
+      <Source>BlackHole.png</Source>
+      <Name>BlackHole</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\turkycat\Google Drive\Source\XNA\DogePong\DogePong\DogePong\bin\x86\Debug\Content\BlackHole.xnb</Output>
+      <Time>2014-02-10T06:30:27.2934143-06:00</Time>
+    </Item>
     <BuildSuccessful>true</BuildSuccessful>
     <Settings>
       <ContentProjectGUID>{89496A77-C195-4F52-8840-5A96603A846A}</ContentProjectGUID>

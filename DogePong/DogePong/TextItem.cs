@@ -10,7 +10,7 @@ namespace DogePong
     /**
      * private class to wrap properties of a text item to the screen
      */
-    class TextItem
+    public class TextItem
     {
         public bool permanent;
         public String sequence;
