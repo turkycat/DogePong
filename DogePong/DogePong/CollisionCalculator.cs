@@ -143,8 +143,9 @@ namespace DogePong
 
                     Vector2 movement = second.trajectory.currentVelocity - first.trajectory.currentVelocity;
 
-                    Vector2 toOtherMidpoint = second.midpoint - first.midpoint;
-                    float distance = Vector2.Distance( first.nextMidpoint, second.nextMidpoint );
+                    Vector2 toOtherMidpoint = second.trajectory.currentPosition - first.trajectory.currentPosition;
+                    //Vector2 toOtherMidpoint = second.midpoint - first.midpoint;
+                    float distance = Vector2.Distance( first.trajectory.currentPosition, second.trajectory.currentPosition );
 
                     //if the combined movement vector's magnitude isn't great enough to cover the gap between the balls, they can't collide.
                     float diameter = first.radius * 2;
@@ -192,6 +193,7 @@ namespace DogePong
                     }
 
                     float collisionTime = newDistance / ( distance - diameter );
+                    collisionTime = MathHelper.Clamp( collisionTime, 0.0f, 1.0f );
                     CollisionEvent eve = new CollisionEvent( first, second, collisionTime );
                     if( !collisions.Contains( eve ) )
                         collisions.Add( eve );
