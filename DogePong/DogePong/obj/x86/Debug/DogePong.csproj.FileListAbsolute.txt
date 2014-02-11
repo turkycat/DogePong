@@ -41,3 +41,4 @@ C:\Users\turkycat\Google Drive\Source\XNA\DogePong\DogePong\DogePong\obj\x86\Deb
 C:\Users\turkycat\Google Drive\Source\XNA\DogePong\DogePong\DogePong\obj\x86\Debug\DogePong.exe
 C:\Users\turkycat\Google Drive\Source\XNA\DogePong\DogePong\DogePong\obj\x86\Debug\DogePong.pdb
 C:\Users\turkycat\Google Drive\Source\XNA\DogePong\DogePong\DogePong\bin\x86\Debug\Content\BlackHole.xnb
+C:\Users\turkycat\Google Drive\Source\XNA\DogePong\DogePong\DogePong\bin\x86\Debug\Content\Kinect.xnb

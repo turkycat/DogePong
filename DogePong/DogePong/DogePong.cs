@@ -113,6 +113,7 @@ namespace DogePong
             GameState.Instance.addTexture( "dogehead", Content.Load<Texture2D>( "dogehead" ) );
             GameState.Instance.addTexture( "dogeball", Content.Load<Texture2D>( "dogeball" ) );
             GameState.Instance.addTexture( "blackhole", Content.Load<Texture2D>( "blackhole" ) );
+            GameState.Instance.addTexture( "kinect", Content.Load<Texture2D>( "Kinect" ) );
 
 
             GameState.Instance.addFont( "small", Content.Load<SpriteFont>( "ComicSansSmall" ) );
@@ -151,8 +152,8 @@ namespace DogePong
 
             //initialize a player and a computer player for starters
             Controller blueController = new GamePadController( PlayerIndex.One );
-            Controller redController = new GamePadController( PlayerIndex.One );
-            //Controller redController = new ComputerController();
+            //Controller redController = new GamePadController( PlayerIndex.Two );
+            Controller redController = new ComputerController();
 
             //initialize players
             blue = new Player( blueController, PlayerIndex.One, bluePaddle, blueScore );
@@ -237,7 +238,7 @@ namespace DogePong
                 {
                     if ( selected == MenuItem.MULTI )
                     {
-                        if (playerTwo.IsConnected)
+                        if (playerTwo.IsConnected || GameState.Instance.KinectReady)
                         {
                             players = 2;
                             red.setController( new GamePadController( PlayerIndex.Two ) );
@@ -392,7 +393,11 @@ namespace DogePong
             spriteBatch.DrawString( GameState.Instance.getFont("large"), "uno doge", new Vector2( 620, 350 ), first, 0f, new Vector2(), 1f, SpriteEffects.None, .1f );
             spriteBatch.DrawString( GameState.Instance.getFont( "large" ), "dos doges", new Vector2( 600, 450 ), second, 0f, new Vector2(), 1f, SpriteEffects.None, .1f );
 
-            if (selected == MenuItem.MULTI && !red.isGamePadConnected())
+            if ( GameState.Instance.KinectReady )
+            {
+                spriteBatch.Draw( GameState.Instance.getTexture( "kinect" ), new Vector2( 1200, 600 ), null, Color.White, 0f, new Vector2(), 1.0f, SpriteEffects.None, 0f );
+            }
+            else if (selected == MenuItem.MULTI && !red.isGamePadConnected() )
             {
                 spriteBatch.DrawString( GameState.Instance.getFont( "large" ), "no wai", new Vector2( 650, 520 ), Color.Ivory, -.6f, new Vector2(), 1f, SpriteEffects.None, 0f );
             }

@@ -7,3 +7,4 @@ Content\ComicSans.xnb
 Content\ComicSansSmall.xnb
 Content\ComicSansLarge.xnb
 Content\BlackHole.xnb
+Content\Kinect.xnb
