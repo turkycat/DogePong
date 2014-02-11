@@ -9,6 +9,53 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 
+/**
+ * Don't judge me too harshly on the design pattern... I feel like it started out making a bit more sense than it does now, but hopefully you'll find this useful:
+ * 
+ *                                                      DogePong                                                                    "is a" relationships
+ *                                                          |                                                                          V V V V V V V
+ *   "has a" relationships -->               -----------------------------------------------------------------                     ---------------------
+ *                                           |                                   |                           |                     |    IController    | (i)
+ *                                           |                                 Player                        |                     ---------------------
+ *                                           |                                   |                           |                                |
+ *                                           |        ----------------------------------has-a-----           |                                V
+ *                                           |        |          |                                |          |                     ----------------------
+ *                                           |        |        Paddle                         Controller -> Kinect                 |     Controller     |
+ *                                       Colliders    |          |                                                                 ----------------------
+ *                                           |------  |  ---------                                                                            |     
+ *                                                 |  |  |                                                                                    V
+ *                                                 |  |  |                                                              ----------------------------------------------
+ *                                                Trajectory                                                            |                     |                      |
+ *                                                                                                                      V                     V                      V
+ *                                                                                                            ---------------------    ----------------       ----------------
+ *                                                                                                            | GamePadController |     |   Kinect    |       |  Computer    |
+ *                                                                                                            ---------------------    ----------------       -----------------
+ *                                                                                                            
+ * 
+ *                                          ---------------------                                                                 
+ *       more "is a"                        |    ICollidable    | (i)
+ *                                          ---------------------
+ *                                                    |
+ *                                                    |---------------------------
+ *                                                    |                          |
+ *                                                    V                          V
+ *                                          ----------------------      -----------------------
+ *                                     (ac) | SphericalCollider  |      |      Boundary        |
+ *                                          ----------------------      -----------------------                                                                       |     
+ *                                                    |
+ *                                                    V
+ *                                   ---------------------------------------
+ *                                   |                                     |
+ *                                   V                                     V
+ *                        ---------------------               -----------------------
+ *                        |      DogeBall     |               |      BlackHole      |
+ *                        ---------------------               -------------------------
+ *                         
+ * 
+ * Kinect support automatically allows you to use up to two players, but an Kinect logo image will appear on the main screen confirming that the Kinect is ready
+ * otherwise, you can play with any standard GamePad (tested with Xbox360 usb controller)
+ */
+
 namespace DogePong
 {
     using Controllers;
@@ -19,6 +66,7 @@ namespace DogePong
         SINGLE,
         MULTI
     };
+
 
     /// <summary>
     /// This is the main type for your game
