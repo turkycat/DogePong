@@ -89,7 +89,133 @@
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\turkycat\Google Drive\Source\XNA\DogePong\DogePong\DogePong\bin\x86\Debug\Content\Kinect.xnb</Output>
-      <Time>2014-02-10T18:22:57.6945974-06:00</Time>
+      <Time>2014-02-13T00:04:50.3314478-06:00</Time>
+    </Item>
+    <Item>
+      <Source>KinectDisable.png</Source>
+      <Name>KinectDisable</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\turkycat\Google Drive\Source\XNA\DogePong\DogePong\DogePong\bin\x86\Debug\Content\KinectDisable.xnb</Output>
+      <Time>2014-02-12T23:32:55.6079319-06:00</Time>
+    </Item>
+    <Item>
+      <Source>KinectReady.png</Source>
+      <Name>KinectReady</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\turkycat\Google Drive\Source\XNA\DogePong\DogePong\DogePong\bin\x86\Debug\Content\KinectReady.xnb</Output>
+      <Time>2014-02-12T23:32:55.610932-06:00</Time>
+    </Item>
+    <Item>
+      <Source>Sounds\boing.wav</Source>
+      <Name>Sounds\boing</Name>
+      <Importer>WavImporter</Importer>
+      <Processor>SoundEffectProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\turkycat\Google Drive\Source\XNA\DogePong\DogePong\DogePong\bin\x86\Debug\Content\Sounds\boing.xnb</Output>
+      <Time>2014-02-13T02:21:24.7931442-06:00</Time>
+    </Item>
+    <Item>
+      <Source>Sounds\boing2.wav</Source>
+      <Name>Sounds\boing2</Name>
+      <Importer>WavImporter</Importer>
+      <Processor>SoundEffectProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\turkycat\Google Drive\Source\XNA\DogePong\DogePong\DogePong\bin\x86\Debug\Content\Sounds\boing2.xnb</Output>
+      <Time>2014-02-13T02:21:24.7951443-06:00</Time>
+    </Item>
+    <Item>
+      <Source>Sounds\boing3.wav</Source>
+      <Name>Sounds\boing3</Name>
+      <Importer>WavImporter</Importer>
+      <Processor>SoundEffectProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\turkycat\Google Drive\Source\XNA\DogePong\DogePong\DogePong\bin\x86\Debug\Content\Sounds\boing3.xnb</Output>
+      <Time>2014-02-13T02:21:24.7971444-06:00</Time>
+    </Item>
+    <Item>
+      <Source>Sounds\boop2.wav</Source>
+      <Name>Sounds\boop2</Name>
+      <Importer>WavImporter</Importer>
+      <Processor>SoundEffectProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\turkycat\Google Drive\Source\XNA\DogePong\DogePong\DogePong\bin\x86\Debug\Content\Sounds\boop2.xnb</Output>
+      <Time>2014-02-13T02:30:52.2426004-06:00</Time>
+    </Item>
+    <Item>
+      <Source>Sounds\boop3.wav</Source>
+      <Name>Sounds\boop3</Name>
+      <Importer>WavImporter</Importer>
+      <Processor>SoundEffectProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\turkycat\Google Drive\Source\XNA\DogePong\DogePong\DogePong\bin\x86\Debug\Content\Sounds\boop3.xnb</Output>
+      <Time>2014-02-13T02:30:52.2426004-06:00</Time>
+    </Item>
+    <Item>
+      <Source>Sounds\err.wav</Source>
+      <Name>Sounds\err</Name>
+      <Importer>WavImporter</Importer>
+      <Processor>SoundEffectProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\turkycat\Google Drive\Source\XNA\DogePong\DogePong\DogePong\bin\x86\Debug\Content\Sounds\err.xnb</Output>
+      <Time>2014-02-13T02:21:24.8011446-06:00</Time>
+    </Item>
+    <Item>
+      <Source>Sounds\point.wav</Source>
+      <Name>Sounds\point</Name>
+      <Importer>WavImporter</Importer>
+      <Processor>SoundEffectProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\turkycat\Google Drive\Source\XNA\DogePong\DogePong\DogePong\bin\x86\Debug\Content\Sounds\point.xnb</Output>
+      <Time>2014-02-13T02:21:24.8031448-06:00</Time>
+    </Item>
+    <Item>
+      <Source>Sounds\port2.wav</Source>
+      <Name>Sounds\port2</Name>
+      <Importer>WavImporter</Importer>
+      <Processor>SoundEffectProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\turkycat\Google Drive\Source\XNA\DogePong\DogePong\DogePong\bin\x86\Debug\Content\Sounds\port2.xnb</Output>
+      <Time>2014-02-13T02:21:24.8051449-06:00</Time>
+    </Item>
+    <Item>
+      <Source>Sounds\boop0.wav</Source>
+      <Name>Sounds\boop0</Name>
+      <Importer>WavImporter</Importer>
+      <Processor>SoundEffectProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\turkycat\Google Drive\Source\XNA\DogePong\DogePong\DogePong\bin\x86\Debug\Content\Sounds\boop0.xnb</Output>
+      <Time>2014-02-13T02:30:52.2366001-06:00</Time>
+    </Item>
+    <Item>
+      <Source>Sounds\boop1.wav</Source>
+      <Name>Sounds\boop1</Name>
+      <Importer>WavImporter</Importer>
+      <Processor>SoundEffectProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\turkycat\Google Drive\Source\XNA\DogePong\DogePong\DogePong\bin\x86\Debug\Content\Sounds\boop1.xnb</Output>
+      <Time>2014-02-13T02:30:52.2396003-06:00</Time>
+    </Item>
+    <Item>
+      <Source>Sounds\port0.wav</Source>
+      <Name>Sounds\port0</Name>
+      <Importer>WavImporter</Importer>
+      <Processor>SoundEffectProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\turkycat\Google Drive\Source\XNA\DogePong\DogePong\DogePong\bin\x86\Debug\Content\Sounds\port0.xnb</Output>
+      <Time>2014-02-13T02:21:24.8041448-06:00</Time>
+    </Item>
+    <Item>
+      <Source>Sounds\port1.wav</Source>
+      <Name>Sounds\port1</Name>
+      <Importer>WavImporter</Importer>
+      <Processor>SoundEffectProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\turkycat\Google Drive\Source\XNA\DogePong\DogePong\DogePong\bin\x86\Debug\Content\Sounds\port1.xnb</Output>
+      <Time>2014-02-13T02:21:24.8061449-06:00</Time>
     </Item>
     <BuildSuccessful>true</BuildSuccessful>
     <Settings>

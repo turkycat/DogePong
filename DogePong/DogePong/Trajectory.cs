@@ -34,7 +34,7 @@ namespace DogePong
             this.currentPosition = new Vector2( currentPosition.X, currentPosition.Y );
             this.nextPosition = new Vector2( currentPosition.X, currentPosition.Y );
             this.currentVelocity = new Vector2( initialVelocity.X, initialVelocity.Y );
-            this.nextVelocity = new Vector2( initialVelocity.X, initialVelocity.Y );
+            //this.nextVelocity = new Vector2( initialVelocity.X, initialVelocity.Y );
         }
 
 

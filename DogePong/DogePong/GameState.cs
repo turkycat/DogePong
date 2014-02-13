@@ -12,6 +12,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace DogePong
 {
+    using Controllers;
     public enum State
     {
         MENU,
@@ -29,15 +30,22 @@ namespace DogePong
 
         private Dictionary<string, Texture2D> textures;
         private Dictionary<string, SpriteFont> fonts;
+        private Dictionary<string, SoundEffect> sounds;
 
         private DogeBall[] balls;
         private int activeBalls;
 
+        public Player blue;
+        public Player red;
+        public MenuItem selectedMenuItem;
+        public ButtonState pauseButtonState;
         public Random randy;
         public State State { get; set; }
+        public int players;
         public int GameHeight;
         public int GameWidth;
         public bool KinectReady;
+        public bool KinectEnabled;
 
         public double totalMillis;
 
@@ -48,11 +56,15 @@ namespace DogePong
         {
             this.textures = new Dictionary<string, Texture2D>();
             this.fonts = new Dictionary<string, SpriteFont>();
+            this.sounds = new Dictionary<string, SoundEffect>();
             this.State = State.MENU;
             this.randy = new Random();
             this.balls = new DogeBall[ DogePong.MAX_BALLS ];
             this.activeBalls = 0;
             this.KinectReady = false;
+            this.KinectEnabled = true;
+            this.pauseButtonState = ButtonState.Released;
+            this.selectedMenuItem = MenuItem.SINGLE;
         }
 
         //the idea of using the singleton class as a texture reference goes to James Boddie
@@ -83,6 +95,22 @@ namespace DogePong
 
         #endregion
 
+        #region Sound Related Methods
+
+        public void addSound( string key, SoundEffect sound )
+        {
+            sounds.Add( key, sound );
+        }
+
+
+        public SoundEffect getSound( string key )
+        {
+            if ( !sounds.ContainsKey( key ) ) return null;
+            return sounds[key];
+        }
+
+        #endregion
+
 
         #region Ball Related Methods
 
@@ -104,7 +132,7 @@ namespace DogePong
         public void spawnBall( Vector2 position )
         {
             if ( activeBalls == DogePong.MAX_BALLS ) return;
-            Vector2 ballVelocity = generateRandomVelocity() * 10;
+            Vector2 ballVelocity = generateRandomVelocity() * 30;
             balls[activeBalls++] = new DogeBall( new Trajectory( position, ballVelocity ) );
         }
 
@@ -170,7 +198,7 @@ namespace DogePong
          */
         public Vector2 generateRandomLocation( float width, float height )
         {
-            return new Vector2( randy.Next( (int) DogePong.BOUNDARY_DENSITY, (int) ( GameWidth - DogePong.BOUNDARY_DENSITY - width ) ), randy.Next( (int) ( GameHeight - DogePong.BOUNDARY_DENSITY - height ) ) );
+            return new Vector2( randy.Next( (int) DogePong.BOUNDARY_DENSITY, (int) ( GameWidth - DogePong.BOUNDARY_DENSITY - width ) ), randy.Next( (int) DogePong.BOUNDARY_DENSITY, (int) ( GameHeight - DogePong.BOUNDARY_DENSITY - height ) ) );
         }
 
 
@@ -182,6 +210,54 @@ namespace DogePong
             float x = (float) ( randy.NextDouble() - 0.5 );
             float y = (float) ( randy.NextDouble() - 0.5 );
             return new Vector2( x, y );
+        }
+
+
+        /**
+         * yea, this doesn't do anything right now...
+         */
+        public void reset()
+        {
+            
+        }
+
+
+
+
+        /**
+         * handles toggling the paused state of the game
+         */
+        public void handlePauseEvent( GameTime gameTime )
+        {
+            //only allow the event to be processed once for each individual button press (avoids lightning-fast pause toggle due to update loop speed)
+            if ( pauseButtonState == ButtonState.Released )
+            {
+                pauseButtonState = ButtonState.Pressed;
+                if ( GameState.Instance.State == State.PLAYING )
+                {
+                    GameState.Instance.State = State.PAUSED;
+                }
+                else if ( GameState.Instance.State == State.PAUSED )
+                {
+                    GameState.Instance.State = State.PLAYING;
+                    long currentSeconds = (long) gameTime.TotalGameTime.TotalSeconds;
+                }
+            }
+        }
+
+
+
+        public void Begin()
+        {
+            if ( players == 2 )
+            {
+                red.setController( new GamePadController( PlayerIndex.Two ) );
+            }
+            else if ( !( KinectEnabled && KinectReady ) )
+            {
+                red.setController( new ComputerController() );
+            }
+            GameState.Instance.State = State.PLAYING;
         }
 
 

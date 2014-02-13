@@ -87,7 +87,7 @@ namespace DogePong
             //all collisions should be processed, and each ball's next position/velocity will have been properly set.
             for ( int i = 0; i < GameState.Instance.NumberOfBalls(); ++i )
             {
-                GameState.Instance.GetBall(i).applyNextPosition();
+                GameState.Instance.GetBall( i ).applyNextPosition();
             }
 
             holes[0].applyNextPosition();

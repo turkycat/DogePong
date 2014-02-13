@@ -10,7 +10,9 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 
 /**
- * Don't judge me too harshly on the design pattern... I feel like it started out making a bit more sense than it does now, but hopefully you'll find this useful:
+ * Don't judge me too harshly on the design pattern... Let's just say there are a few things I would do differently if I wrote this again,
+ *  and a few things I did do differently on my 2nd XNA project. 
+ *                   either way, hopefully you'll find this useful:
  * 
  *                                                      DogePong                                                                    "is a" relationships
  *                                                          |                                                                          V V V V V V V
@@ -18,18 +20,18 @@ using Microsoft.Xna.Framework.Media;
  *                                           |                                   |                           |                     |    IController    | (i)
  *                                           |                                 Player                        |                     ---------------------
  *                                           |                                   |                           |                                |
- *                                           |        ----------------------------------has-a-----           |                                V
+ *                                           |        --------------------------------------------           |                                V
  *                                           |        |          |                                |          |                     ----------------------
- *                                           |        |        Paddle                         Controller -> Kinect                 |     Controller     |
+ *                                           |        |        Paddle                         Controller    Kinect                 |     Controller     |
  *                                       Colliders    |          |                                                                 ----------------------
  *                                           |------  |  ---------                                                                            |     
  *                                                 |  |  |                                                                                    V
  *                                                 |  |  |                                                              ----------------------------------------------
- *                                                Trajectory                                                            |                     |                      |
- *                                                                                                                      V                     V                      V
- *                                                                                                            ---------------------    ----------------       ----------------
- *                                                                                                            | GamePadController |     |   Kinect    |       |  Computer    |
- *                                                                                                            ---------------------    ----------------       -----------------
+ *                                                Trajectory                                                            |                                            |
+ *                                                                                                                      V                                            V
+ *                                                                                                            ---------------------                           ----------------
+ *                                                                                                            | GamePadController |                            |  Computer    |
+ *                                                                                                            ---------------------                           -----------------
  *                                                                                                            
  * 
  *                                          ---------------------                                                                 
@@ -77,18 +79,18 @@ namespace DogePong
         public static int POINTS_TO_WIN = 7;
         public static float BOUNDARY_DENSITY = 75.0f;
 
-        public static float northBoundary;
-        public static float southBoundary;
+        //public static float northBoundary;
+        //public static float southBoundary;
 
         //private bool gameOver = false;
-        private MenuItem selected;
+        //private MenuItem selected;
 
         static GraphicsDeviceManager graphics;
         static SpriteBatch spriteBatch;
 
         //players
-        Player blue;
-        Player red;
+        //Player blue;
+        //Player red;
         
         //player paddles
         Paddle bluePaddle;
@@ -104,8 +106,6 @@ namespace DogePong
         private CollisionCalculator calculator;
 
         //dynamic game properties
-        private ButtonState pauseButtonState = ButtonState.Released;
-        private int players = 1;
         private Vector2 neutralSpawningPoint;
         private long elapsedTime;
         private Color currentBackgroundColor;
@@ -162,11 +162,24 @@ namespace DogePong
             GameState.Instance.addTexture( "dogeball", Content.Load<Texture2D>( "dogeball" ) );
             GameState.Instance.addTexture( "blackhole", Content.Load<Texture2D>( "blackhole" ) );
             GameState.Instance.addTexture( "kinect", Content.Load<Texture2D>( "Kinect" ) );
+            GameState.Instance.addTexture( "kinectready", Content.Load<Texture2D>( "KinectReady" ) );
+            GameState.Instance.addTexture( "kinectdisable", Content.Load<Texture2D>( "KinectDisable" ) );
 
 
             GameState.Instance.addFont( "small", Content.Load<SpriteFont>( "ComicSansSmall" ) );
             GameState.Instance.addFont( "regular", Content.Load<SpriteFont>( "ComicSans" ) );
             GameState.Instance.addFont( "large", Content.Load<SpriteFont>( "ComicSansLarge" ) );
+
+
+            GameState.Instance.addSound( "boing", Content.Load<SoundEffect>( @"Sounds/boing" ) );
+            GameState.Instance.addSound( "point", Content.Load<SoundEffect>( @"Sounds/point" ) );
+            GameState.Instance.addSound( "boop0", Content.Load<SoundEffect>( @"Sounds/boop0" ) );
+            GameState.Instance.addSound( "boop1", Content.Load<SoundEffect>( @"Sounds/boop1" ) );
+            GameState.Instance.addSound( "boop2", Content.Load<SoundEffect>( @"Sounds/boop2" ) );
+            GameState.Instance.addSound( "boop3", Content.Load<SoundEffect>( @"Sounds/boop3" ) );
+            GameState.Instance.addSound( "port0", Content.Load<SoundEffect>( @"Sounds/port0" ) );
+            GameState.Instance.addSound( "port1", Content.Load<SoundEffect>( @"Sounds/port1" ) );
+            GameState.Instance.addSound( "port2", Content.Load<SoundEffect>( @"Sounds/port2" ) );
 
             textList = new List<TextItem>();
             blueScore = new TextItem( "0", GameState.Instance.getFont( "regular" ), new Vector2( 680f, 15f ), Color.White, 0 ); ;
@@ -204,8 +217,10 @@ namespace DogePong
             Controller redController = new ComputerController();
 
             //initialize players
-            blue = new Player( blueController, PlayerIndex.One, bluePaddle, blueScore );
-            red = new Player( redController, PlayerIndex.Two, redPaddle, redScore );
+            Player blue = new Player( blueController, PlayerIndex.One, bluePaddle, blueScore );
+            Player red = new Player( redController, PlayerIndex.Two, redPaddle, redScore );
+            GameState.Instance.blue = blue;
+            GameState.Instance.red = red;
             //red = new Player( PlayerIndex.One, redPaddle, redScore );
 
             //initialize collision engine
@@ -219,17 +234,23 @@ namespace DogePong
             neutralSpawningPoint = new Vector2( centerBallWidth, centerBallHeight );
 
 
-            Kinect kin = new Kinect( blue, red );
+            Kinect kin = new Kinect( this, blue, red );
             kin.init();
+            this.Components.Add( kin );
 
             //spawn the initial ball
             GameState.Instance.spawnBall( neutralSpawningPoint );
+
+            GameState.Instance.State = State.END;
         }
 
-        /// <summary>
-        /// UnloadContent will be called once per game and is the place to unload
-        /// all content.
-        /// </summary>
+
+
+
+
+        /**
+         * I should probably put some code here :-/
+         */
         protected override void UnloadContent()
         {
             // TODO: Unload any non ContentManager content here
@@ -243,17 +264,12 @@ namespace DogePong
 
 
 
-        /// <summary>
-        /// Allows the game to run logic such as updating the world,
-        /// checking for collisions, gathering input, and playing audio.
-        /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
+        /**
+         * updates! my favorite thing!
+         */
         protected override void Update( GameTime gameTime )
         {
             GameState.Instance.totalMillis = gameTime.TotalGameTime.TotalMilliseconds;
-            //define the north and south walls, for more sensible collision detection code
-            northBoundary = BOUNDARY_DENSITY;
-            southBoundary = ( graphics.GraphicsDevice.Viewport.Height - BOUNDARY_DENSITY );
 
             if ( GameState.Instance.State == State.PLAYING )
             {
@@ -266,38 +282,36 @@ namespace DogePong
             // Allows the game to pause
             if (playerOne.Buttons.Start == ButtonState.Pressed || (playerTwo.IsConnected && playerTwo.Buttons.Start == ButtonState.Pressed))
             {
-                handlePauseEvent(gameTime);
+                GameState.Instance.handlePauseEvent(gameTime);
             }
             else
             {
-                pauseButtonState = ButtonState.Released;
+                GameState.Instance.pauseButtonState = ButtonState.Released;
             }
 
             // handle events that occur in the menu state
             if ( GameState.Instance.State == State.MENU )
             {
                 //primitive menu item selection, but works for now... while I only have two menu items
-                if ( playerOne.ThumbSticks.Left.Y < 0f ) selected = MenuItem.MULTI;
-                if ( playerOne.ThumbSticks.Left.Y > 0f ) selected = MenuItem.SINGLE;
-                if ( playerOne.DPad.Down == ButtonState.Pressed ) selected = MenuItem.MULTI;
-                if ( playerOne.DPad.Up == ButtonState.Pressed ) selected = MenuItem.SINGLE;
+                if ( playerOne.ThumbSticks.Left.Y < 0f ) GameState.Instance.selectedMenuItem = MenuItem.MULTI;
+                if ( playerOne.ThumbSticks.Left.Y > 0f ) GameState.Instance.selectedMenuItem = MenuItem.SINGLE;
+                if ( playerOne.DPad.Down == ButtonState.Pressed ) GameState.Instance.selectedMenuItem = MenuItem.MULTI;
+                if ( playerOne.DPad.Up == ButtonState.Pressed ) GameState.Instance.selectedMenuItem = MenuItem.SINGLE;
 
                 if ( playerOne.Buttons.A == ButtonState.Pressed )
                 {
-                    if ( selected == MenuItem.MULTI )
+                    if ( GameState.Instance.selectedMenuItem == MenuItem.MULTI )
                     {
-                        if (playerTwo.IsConnected || GameState.Instance.KinectReady)
+                        if ( playerTwo.IsConnected || ( GameState.Instance.KinectReady && GameState.Instance.KinectEnabled ) )
                         {
-                            players = 2;
-                            red.setController( new GamePadController( PlayerIndex.Two ) );
-                            GameState.Instance.State = State.PLAYING;
+                            GameState.Instance.players = 2;
+                            GameState.Instance.Begin();
                         }
                     }
                     else
                     {
-                        GameState.Instance.State = State.PLAYING;
-                        players = 1;
-                        //red = new ComputerPlayer( PlayerIndex.Two, red.paddle, red.scoreText );
+                        GameState.Instance.players = 1;
+                        GameState.Instance.Begin();
                     }
                 }
             }
@@ -305,12 +319,12 @@ namespace DogePong
             else if ( GameState.Instance.State == State.PLAYING )
             {
 
-                blue.calculatePlayerMovement();
-                red.calculatePlayerMovement();
+                GameState.Instance.blue.calculatePlayerMovement();
+                GameState.Instance.red.calculatePlayerMovement();
 
                 calculator.calculate();
 
-                if (blue.Score() >= POINTS_TO_WIN || red.Score() >= POINTS_TO_WIN)
+                if ( GameState.Instance.blue.Score() >= POINTS_TO_WIN || GameState.Instance.red.Score() >= POINTS_TO_WIN )
                 {
                     GameState.Instance.State = State.END;
                 }
@@ -327,10 +341,9 @@ namespace DogePong
 
 
 
-        /// <summary>
-        /// This is called when the game should draw itself.
-        /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
+         /**
+          * This is called when the game should draw itself.
+          */
         protected override void Draw( GameTime gameTime )
         {
             int elapsedMillis = gameTime.ElapsedGameTime.Milliseconds;
@@ -338,6 +351,10 @@ namespace DogePong
             GraphicsDevice.Clear( currentBackgroundColor );
 
             spriteBatch.Begin( SpriteSortMode.BackToFront, BlendState.AlphaBlend );
+
+
+            //---------------------------------draw main elements of frame
+
 
             spriteBatch.Draw( GameState.Instance.getTexture( "border" ), Vector2.Zero, null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 1f );
             //spriteBatch.Draw( border, new Vector2( 0, 0 ), Color.White );
@@ -351,6 +368,7 @@ namespace DogePong
                 drawMenu( spriteBatch );
             }
             
+
             //we will still continue to process events and draw paddles & text items while the game is in any other state besides menu
             else
             {
@@ -368,10 +386,15 @@ namespace DogePong
                 }
             }
 
+
+
+
+            //----------------------draw special menu events
+
             //we have additional special draw commands that need to be handled when the game is over or paused
             if ( GameState.Instance.State == State.END )
             {
-                spriteBatch.DrawString( GameState.Instance.getFont( "large" ), "many game overs", new Vector2( 700, 300 ), Color.White );
+                drawGameOver();
             }
             else if (GameState.Instance.State == State.PAUSED)
             {
@@ -379,6 +402,11 @@ namespace DogePong
                 spriteBatch.DrawString( GameState.Instance.getFont( "large" ), "wow", new Vector2( 1000, 250 ), Color.Snow, .6f, Vector2.Zero, 1f, SpriteEffects.None, 0f );
                 spriteBatch.Draw( GameState.Instance.getTexture( "dogehead" ), new Vector2( 640, 250 ), null, Color.White, .6f, Vector2.Zero, 1.0f, SpriteEffects.None, 0f );
             }
+
+
+
+            //----------------------------draw the balls
+
 
             //only draw the balls if the game is playing
             if ( GameState.Instance.State == State.PLAYING )
@@ -400,30 +428,16 @@ namespace DogePong
 
 
 
-
-
-
-
-
         /**
-         * handles toggling the paused state of the game
+         * game over
          */
-        private void handlePauseEvent(GameTime gameTime)
+        private void drawGameOver()
         {
-            //only allow the event to be processed once for each individual button press (avoids lightning-fast pause toggle due to update loop speed)
-            if (pauseButtonState == ButtonState.Released)
-            {
-                pauseButtonState = ButtonState.Pressed;
-                if ( GameState.Instance.State == State.PLAYING )
-                {
-                    GameState.Instance.State = State.PAUSED;
-                }
-                else if ( GameState.Instance.State == State.PAUSED )
-                {
-                    GameState.Instance.State = State.PLAYING;
-                    long currentSeconds = (long)gameTime.TotalGameTime.TotalSeconds;
-                }
-            }
+            spriteBatch.Draw( GameState.Instance.getTexture( "dogehead" ), new Vector2( 700, 200 ), null, Color.White, 0.5f, Vector2.Zero, 1.0f, SpriteEffects.None, 0f );
+            spriteBatch.DrawString( GameState.Instance.getFont( "large" ), "wow", new Vector2( 400, 300 ), Color.Red, -0.5f, Vector2.Zero, 1f, SpriteEffects.None, 0f );
+            spriteBatch.DrawString( GameState.Instance.getFont( "large" ), "so bad", new Vector2( 1100, 300 ), Color.White, .2f, Vector2.Zero, 1f, SpriteEffects.None, 0f );
+            spriteBatch.DrawString( GameState.Instance.getFont( "large" ), "much shame", new Vector2( 900, 700 ), Color.Gold, -.6f, Vector2.Zero, 1f, SpriteEffects.None, 0f );
+            //spriteBatch.DrawString( GameState.Instance.getFont( "large" ), "uno doge", new Vector2( 620, 350 ), first, 0f, new Vector2(), 1f, SpriteEffects.None, .1f );
         }
 
 
@@ -441,18 +455,27 @@ namespace DogePong
             spriteBatch.DrawString( GameState.Instance.getFont("large"), "uno doge", new Vector2( 620, 350 ), first, 0f, new Vector2(), 1f, SpriteEffects.None, .1f );
             spriteBatch.DrawString( GameState.Instance.getFont( "large" ), "dos doges", new Vector2( 600, 450 ), second, 0f, new Vector2(), 1f, SpriteEffects.None, .1f );
 
-            if ( GameState.Instance.KinectReady )
+            if ( !GameState.Instance.KinectEnabled )
+            {
+                spriteBatch.Draw( GameState.Instance.getTexture( "kinectdisable" ), new Vector2( 1200, 600 ), null, Color.White, 0f, new Vector2(), 1.0f, SpriteEffects.None, 0f );
+            }
+            else if ( GameState.Instance.KinectReady )
+            {
+                spriteBatch.Draw( GameState.Instance.getTexture( "kinectready" ), new Vector2( 1200, 600 ), null, Color.White, 0f, new Vector2(), 1.0f, SpriteEffects.None, 0f );
+            }
+            else
             {
                 spriteBatch.Draw( GameState.Instance.getTexture( "kinect" ), new Vector2( 1200, 600 ), null, Color.White, 0f, new Vector2(), 1.0f, SpriteEffects.None, 0f );
             }
-            else if (selected == MenuItem.MULTI && !red.isGamePadConnected() )
+
+            if ( GameState.Instance.selectedMenuItem == MenuItem.MULTI && !GameState.Instance.red.isGamePadConnected() && ( !GameState.Instance.KinectEnabled || !GameState.Instance.KinectReady ) )
             {
                 spriteBatch.DrawString( GameState.Instance.getFont( "large" ), "no wai", new Vector2( 650, 520 ), Color.Ivory, -.6f, new Vector2(), 1f, SpriteEffects.None, 0f );
             }
 
             Vector2 firstPosition = new Vector2( 530, 385 );
             Vector2 secondPosition = new Vector2( 530, 485 );
-            spriteBatch.Draw( GameState.Instance.getTexture("dogeball"), ( selected == MenuItem.SINGLE ? firstPosition : secondPosition ), Color.White );
+            spriteBatch.Draw( GameState.Instance.getTexture( "dogeball" ), ( GameState.Instance.selectedMenuItem == MenuItem.SINGLE ? firstPosition : secondPosition ), Color.White );
 
             spriteBatch.Draw( GameState.Instance.getTexture( "dogehead" ), new Vector2( 840, 250 ), null, Color.White, -.6f, new Vector2(), 1.0f, SpriteEffects.None, 0f );
             spriteBatch.DrawString( GameState.Instance.getFont( "large" ), "wow", new Vector2( 300, 200 ), Color.Snow, -.4f, new Vector2(), 1f, SpriteEffects.None, 0f );
@@ -509,7 +532,7 @@ namespace DogePong
                         break;
                     case 14: s = "much graphx";
                         break;
-                    case 15: s = "so fetch.";
+                    case 15: s = "so fetch";
                         break;
                     case 16: s = "lulz";
                         break;
@@ -520,22 +543,22 @@ namespace DogePong
                 }
             }
 
-            SpriteFont font = GameState.Instance.getFont( "regular" );
-            randy = rnd.Next( 3 );
-            switch( randy )
-            {
-                case 0: font = GameState.Instance.getFont( "small" );
-                    break;
-                case 1: font = GameState.Instance.getFont( "regular" );
-                    break;
-                case 2: font = GameState.Instance.getFont( "large" );
-                    break;
-            }
+            SpriteFont font = GameState.Instance.getFont( "large" );
+            //randy = rnd.Next( 3 );
+            //switch( randy )
+            //{
+            //    case 0: font = GameState.Instance.getFont( "small" );
+            //        break;
+            //    case 1: font = GameState.Instance.getFont( "regular" );
+            //        break;
+            //    case 2: font = GameState.Instance.getFont( "large" );
+            //        break;
+            //}
 
             Vector2 pos = new Vector2( rnd.Next( width + 100 ) - 100, rnd.Next( height + 30 ) - 30 );
             int millis = rnd.Next( 10001 );
             float rotation = (float) rnd.NextDouble() * 5;
-            float scale = (float) rnd.NextDouble() * 3;
+            float scale = (float) rnd.NextDouble() * 2;
             Color color = getRandomColor();
 
             TextItem item = new TextItem( s, font, pos, scale, color, millis, rotation );
@@ -556,14 +579,14 @@ namespace DogePong
             {
                 elapsedTime = currentSeconds;
 
-                //randomize the background color every 10 seconds
-                if ( elapsedTime % 10 == 0 )
+                //randomize the background color every 3 seconds
+                if ( elapsedTime % 3 == 0 )
                 {
                     randomizeBackground();
                 }
 
-                //create a new ball every 8 seconds
-                if ( elapsedTime % 10 == 0 )
+                //create a new ball every 5 seconds
+                if ( elapsedTime % 5 == 0 )
                 {
                     GameState.Instance.spawnBall( neutralSpawningPoint );
                 }

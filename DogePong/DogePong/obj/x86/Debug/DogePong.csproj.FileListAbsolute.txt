@@ -42,3 +42,17 @@ C:\Users\turkycat\Google Drive\Source\XNA\DogePong\DogePong\DogePong\obj\x86\Deb
 C:\Users\turkycat\Google Drive\Source\XNA\DogePong\DogePong\DogePong\obj\x86\Debug\DogePong.pdb
 C:\Users\turkycat\Google Drive\Source\XNA\DogePong\DogePong\DogePong\bin\x86\Debug\Content\BlackHole.xnb
 C:\Users\turkycat\Google Drive\Source\XNA\DogePong\DogePong\DogePong\bin\x86\Debug\Content\Kinect.xnb
+C:\Users\turkycat\Google Drive\Source\XNA\DogePong\DogePong\DogePong\bin\x86\Debug\Content\KinectDisable.xnb
+C:\Users\turkycat\Google Drive\Source\XNA\DogePong\DogePong\DogePong\bin\x86\Debug\Content\KinectReady.xnb
+C:\Users\turkycat\Google Drive\Source\XNA\DogePong\DogePong\DogePong\bin\x86\Debug\Content\Sounds\boing.xnb
+C:\Users\turkycat\Google Drive\Source\XNA\DogePong\DogePong\DogePong\bin\x86\Debug\Content\Sounds\boing2.xnb
+C:\Users\turkycat\Google Drive\Source\XNA\DogePong\DogePong\DogePong\bin\x86\Debug\Content\Sounds\boing3.xnb
+C:\Users\turkycat\Google Drive\Source\XNA\DogePong\DogePong\DogePong\bin\x86\Debug\Content\Sounds\boop2.xnb
+C:\Users\turkycat\Google Drive\Source\XNA\DogePong\DogePong\DogePong\bin\x86\Debug\Content\Sounds\boop3.xnb
+C:\Users\turkycat\Google Drive\Source\XNA\DogePong\DogePong\DogePong\bin\x86\Debug\Content\Sounds\err.xnb
+C:\Users\turkycat\Google Drive\Source\XNA\DogePong\DogePong\DogePong\bin\x86\Debug\Content\Sounds\point.xnb
+C:\Users\turkycat\Google Drive\Source\XNA\DogePong\DogePong\DogePong\bin\x86\Debug\Content\Sounds\port2.xnb
+C:\Users\turkycat\Google Drive\Source\XNA\DogePong\DogePong\DogePong\bin\x86\Debug\Content\Sounds\boop0.xnb
+C:\Users\turkycat\Google Drive\Source\XNA\DogePong\DogePong\DogePong\bin\x86\Debug\Content\Sounds\boop1.xnb
+C:\Users\turkycat\Google Drive\Source\XNA\DogePong\DogePong\DogePong\bin\x86\Debug\Content\Sounds\port0.xnb
+C:\Users\turkycat\Google Drive\Source\XNA\DogePong\DogePong\DogePong\bin\x86\Debug\Content\Sounds\port1.xnb

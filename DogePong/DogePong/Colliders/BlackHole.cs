@@ -25,7 +25,7 @@ namespace DogePong
             if ( GameState.Instance.totalMillis > nextSpawn )
             {
                 nextSpawn = GameState.Instance.totalMillis + 5000 + ( GameState.Instance.randy.NextDouble() * 10000.0 );
-                trajectory.nextPosition = GameState.Instance.generateRandomLocation( gravityRadius * 8, gravityRadius * 8 );
+                trajectory.nextPosition = GameState.Instance.generateRandomLocation( gravityRadius, gravityRadius );
             }
             else
             {

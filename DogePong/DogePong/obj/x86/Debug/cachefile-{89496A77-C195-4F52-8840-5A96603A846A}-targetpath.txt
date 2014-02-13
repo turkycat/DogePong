@@ -8,3 +8,17 @@ Content\ComicSansSmall.xnb
 Content\ComicSansLarge.xnb
 Content\BlackHole.xnb
 Content\Kinect.xnb
+Content\KinectDisable.xnb
+Content\KinectReady.xnb
+Content\Sounds\boing.xnb
+Content\Sounds\boing2.xnb
+Content\Sounds\boing3.xnb
+Content\Sounds\boop2.xnb
+Content\Sounds\boop3.xnb
+Content\Sounds\err.xnb
+Content\Sounds\point.xnb
+Content\Sounds\port2.xnb
+Content\Sounds\boop0.xnb
+Content\Sounds\boop1.xnb
+Content\Sounds\port0.xnb
+Content\Sounds\port1.xnb

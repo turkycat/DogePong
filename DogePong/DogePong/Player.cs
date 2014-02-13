@@ -66,6 +66,7 @@ namespace DogePong
         {
             ++points;
             scoreText.sequence = points.ToString();
+            GameState.Instance.getSound( "point" ).Play();
         }
     }
 }

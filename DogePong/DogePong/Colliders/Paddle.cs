@@ -29,8 +29,10 @@ namespace DogePong
          */
         public void applyMovement()
         {
-            float northBoundary = DogePong.northBoundary;
-            float southBoundary = DogePong.southBoundary;
+            //float northBoundary = DogePong.northBoundary;
+            //float southBoundary = DogePong.southBoundary;
+            float southBoundary = GameState.Instance.GameHeight - DogePong.BOUNDARY_DENSITY;
+            float northBoundary = DogePong.BOUNDARY_DENSITY;
 
             //borrow a reference to the paddle's trajectory
             float textureHeight = texture.Height;
@@ -64,16 +66,10 @@ namespace DogePong
 
 
         //paddles don't collide, other things collide with paddles.
-        public void collide( ICollidable other, float collisionTime )
-        {
-            //if ( other == null ) return;
-            //other.collide( this, collisionTime );
-        }
+        public void collide( ICollidable other, float collisionTime ) { }
 
-        public void weightedMovement( float collisionTime )
-        {
-            //paddles don't move when they are collided with.
-        }
+        //paddles don't move when they are collided with.
+        public void weightedMovement( float collisionTime ) { }
 
         public void reflect( Vector2 normal )
         {
@@ -91,11 +87,13 @@ namespace DogePong
             {
                 DogeBall ball = other as DogeBall;
 
-                //scale the velocity to add 5% speed
+                //scale the velocity to add 30% speed
                 Vector2 velocity = ball.trajectory.currentVelocity;
                 float magnitude = velocity.Length();
                 velocity.Normalize();
-                ball.trajectory.currentVelocity = velocity * ( magnitude * 1.2f );
+                ball.trajectory.currentVelocity = velocity * ( magnitude * 1.3f );
+
+                ball.calculateMovementPotential();
 
                 Vector2 ballMidpoint = ball.midpoint;
                 Vector2 nextMidpoint = ball.nextMidpoint;

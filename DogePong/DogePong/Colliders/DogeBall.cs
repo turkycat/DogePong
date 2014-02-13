@@ -11,6 +11,7 @@ namespace DogePong
     public class DogeBall : SphericalCollider
     {
         public double lastTeleport;
+        public double lastCollision;
 
 #region Constructors
 
@@ -19,19 +20,27 @@ namespace DogePong
         public DogeBall( Trajectory trajectory ) : base( trajectory )
         {
             this.elapsedTime = 0f;
-            this.radius = GameState.Instance.getTexture("dogeball").Width / 2f;
+            this.radius = GameState.Instance.getTexture( "dogeball" ).Width / 2f;
+            this.lastTeleport = 0;
+            this.lastCollision = 0;
         }
 
 #endregion
 
+
+        /**
+         * teleport the ball to the given location, as long as it has passed a certain amount of "grace period" since the last teleport
+         */
         public void teleport( Vector2 newPosition )
         {
             if ( GameState.Instance.totalMillis - lastTeleport > 500 )
             {
+                playTeleportSound();
                 lastTeleport = GameState.Instance.totalMillis;
                 trajectory.currentPosition = new Vector2( newPosition.X, newPosition.Y );
                 trajectory.nextPosition = new Vector2( newPosition.X, newPosition.Y );
-                trajectory.currentVelocity = GameState.Instance.generateRandomVelocity() * 10;
+                //choose a random velocity
+                trajectory.currentVelocity = GameState.Instance.generateRandomVelocity() * 30;
             }
         }
 
@@ -42,12 +51,57 @@ namespace DogePong
          */
         public override void collide( ICollidable other, float collisionTime )
         {
-            this.weightedMovement( collisionTime );
-
+            playCollisionSound();
             //we can assume that collisions will be called in order of earliest to latest, but safe > sorry
             if ( elapsedTime < collisionTime )
             {
+                this.weightedMovement( collisionTime - elapsedTime );
                 elapsedTime = collisionTime;
+            }
+        }
+
+
+
+
+        private void playCollisionSound()
+        {
+            //we will only make a sound once per every set amount of time
+            if ( GameState.Instance.totalMillis - lastCollision > 100 )
+            {
+                lastCollision = GameState.Instance.totalMillis;
+                switch ( GameState.Instance.randy.Next( 4 ) )
+                {
+                    case 0:
+                        GameState.Instance.getSound( "boop0" ).Play();
+                        break;
+                    case 1:
+                        GameState.Instance.getSound( "boop1" ).Play();
+                        break;
+                    case 2:
+                        GameState.Instance.getSound( "boop2" ).Play();
+                        break;
+                    case 3:
+                        GameState.Instance.getSound( "boop3" ).Play();
+                        break;
+                }
+            }
+        }
+
+
+
+        private void playTeleportSound()
+        {
+            switch ( GameState.Instance.randy.Next( 3 ) )
+            {
+                case 0:
+                    GameState.Instance.getSound( "port0" ).Play();
+                    break;
+                case 1:
+                    GameState.Instance.getSound( "port1" ).Play();
+                    break;
+                case 2:
+                    GameState.Instance.getSound( "port2" ).Play();
+                    break;
             }
         }
 

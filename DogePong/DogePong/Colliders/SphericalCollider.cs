@@ -98,7 +98,7 @@ namespace DogePong.Colliders
             {
                 trajectory.currentVelocity = new Vector2( MathHelper.Clamp( trajectory.currentVelocity.X, -6f, 6f ), MathHelper.Clamp( trajectory.currentVelocity.Y, -6f, 6f ) );
             }
-            trajectory.calculateNextPosition( 1f );
+            trajectory.calculateNextPosition( 1f - elapsedTime );
         }
 
         public abstract void collide( ICollidable other, float collisionTime );
