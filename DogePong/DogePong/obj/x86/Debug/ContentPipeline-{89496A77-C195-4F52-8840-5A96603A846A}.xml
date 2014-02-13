@@ -217,6 +217,15 @@
       <Output>C:\Users\turkycat\Google Drive\Source\XNA\DogePong\DogePong\DogePong\bin\x86\Debug\Content\Sounds\port1.xnb</Output>
       <Time>2014-02-13T02:21:24.8061449-06:00</Time>
     </Item>
+    <Item>
+      <Source>Sounds\pew.wav</Source>
+      <Name>Sounds\pew</Name>
+      <Importer>WavImporter</Importer>
+      <Processor>SoundEffectProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\turkycat\Google Drive\Source\XNA\DogePong\DogePong\DogePong\bin\x86\Debug\Content\Sounds\pew.xnb</Output>
+      <Time>2014-02-13T03:59:21.1362518-06:00</Time>
+    </Item>
     <BuildSuccessful>true</BuildSuccessful>
     <Settings>
       <ContentProjectGUID>{89496A77-C195-4F52-8840-5A96603A846A}</ContentProjectGUID>

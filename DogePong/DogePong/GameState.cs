@@ -41,6 +41,7 @@ namespace DogePong
         public ButtonState pauseButtonState;
         public Random randy;
         public State State { get; set; }
+        public Vector2 neutralSpawningPoint;
         public int players;
         public int GameHeight;
         public int GameWidth;
@@ -65,6 +66,7 @@ namespace DogePong
             this.KinectEnabled = true;
             this.pauseButtonState = ButtonState.Released;
             this.selectedMenuItem = MenuItem.SINGLE;
+            this.neutralSpawningPoint = new Vector2( 0, 0 );
         }
 
         //the idea of using the singleton class as a texture reference goes to James Boddie
@@ -111,30 +113,25 @@ namespace DogePong
 
         #endregion
 
-
         #region Ball Related Methods
 
         //----------public
-
-        //public void SpawnBall( Vector2 position )
-        //{
-        //    if( activeBalls == DogePong.MAX_BALLS ) return;
-        //    balls[activeBalls++] = new DogeBall( new Trajectory( position ) );
-        //}
-
-
 
 
 
         /**
          * spawns a ball with an initial position and velocity
          */
-        public void spawnBall( Vector2 position )
+        public void spawnBall( Vector2? position )
         {
             if ( activeBalls == DogePong.MAX_BALLS ) return;
+            Vector2 pos = neutralSpawningPoint;
+            if ( position.HasValue ) pos = position.Value;
             Vector2 ballVelocity = generateRandomVelocity() * 30;
-            balls[activeBalls++] = new DogeBall( new Trajectory( position, ballVelocity ) );
+            balls[activeBalls++] = new DogeBall( new Trajectory( pos, ballVelocity ) );
+            GameState.Instance.getSound( "pew" ).Play();
         }
+
 
         public int NumberOfBalls()
         {
@@ -149,6 +146,8 @@ namespace DogePong
             if( i >= activeBalls ) return null;
             return balls[i];
         }
+
+
 
         public bool RemoveBall( int i )
         {
@@ -187,6 +186,8 @@ namespace DogePong
             balls[i] = balls[j];
             balls[j] = temp;
         }
+
+
         
     #endregion
 

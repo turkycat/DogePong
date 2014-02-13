@@ -79,18 +79,8 @@ namespace DogePong
         public static int POINTS_TO_WIN = 7;
         public static float BOUNDARY_DENSITY = 75.0f;
 
-        //public static float northBoundary;
-        //public static float southBoundary;
-
-        //private bool gameOver = false;
-        //private MenuItem selected;
-
         static GraphicsDeviceManager graphics;
         static SpriteBatch spriteBatch;
-
-        //players
-        //Player blue;
-        //Player red;
         
         //player paddles
         Paddle bluePaddle;
@@ -106,7 +96,6 @@ namespace DogePong
         private CollisionCalculator calculator;
 
         //dynamic game properties
-        private Vector2 neutralSpawningPoint;
         private long elapsedTime;
         private Color currentBackgroundColor;
 
@@ -180,6 +169,7 @@ namespace DogePong
             GameState.Instance.addSound( "port0", Content.Load<SoundEffect>( @"Sounds/port0" ) );
             GameState.Instance.addSound( "port1", Content.Load<SoundEffect>( @"Sounds/port1" ) );
             GameState.Instance.addSound( "port2", Content.Load<SoundEffect>( @"Sounds/port2" ) );
+            GameState.Instance.addSound( "pew", Content.Load<SoundEffect>( @"Sounds/pew" ) );
 
             textList = new List<TextItem>();
             blueScore = new TextItem( "0", GameState.Instance.getFont( "regular" ), new Vector2( 680f, 15f ), Color.White, 0 ); ;
@@ -231,17 +221,12 @@ namespace DogePong
             //initialize first ball with a position directly in the middle of the screen
             float centerBallWidth = ( graphics.GraphicsDevice.Viewport.Width - GameState.Instance.getTexture( "dogeball" ).Width ) / 2.0f;
             float centerBallHeight = ( graphics.GraphicsDevice.Viewport.Height - GameState.Instance.getTexture( "dogeball" ).Height ) / 2.0f;
-            neutralSpawningPoint = new Vector2( centerBallWidth, centerBallHeight );
+            GameState.Instance.neutralSpawningPoint = new Vector2( centerBallWidth, centerBallHeight );
 
 
             Kinect kin = new Kinect( this, blue, red );
             kin.init();
             this.Components.Add( kin );
-
-            //spawn the initial ball
-            GameState.Instance.spawnBall( neutralSpawningPoint );
-
-            GameState.Instance.State = State.END;
         }
 
 
@@ -330,7 +315,7 @@ namespace DogePong
                 }
                 else if (GameState.Instance.NumberOfBalls() == 0)
                 {
-                    GameState.Instance.spawnBall( neutralSpawningPoint );
+                    GameState.Instance.spawnBall( null );
                 }
             }
 
@@ -434,10 +419,9 @@ namespace DogePong
         private void drawGameOver()
         {
             spriteBatch.Draw( GameState.Instance.getTexture( "dogehead" ), new Vector2( 700, 200 ), null, Color.White, 0.5f, Vector2.Zero, 1.0f, SpriteEffects.None, 0f );
-            spriteBatch.DrawString( GameState.Instance.getFont( "large" ), "wow", new Vector2( 400, 300 ), Color.Red, -0.5f, Vector2.Zero, 1f, SpriteEffects.None, 0f );
+            spriteBatch.DrawString( GameState.Instance.getFont( "large" ), "wow", new Vector2( 300, 300 ), Color.Red, -0.3f, Vector2.Zero, 1f, SpriteEffects.None, 0f );
             spriteBatch.DrawString( GameState.Instance.getFont( "large" ), "so bad", new Vector2( 1100, 300 ), Color.White, .2f, Vector2.Zero, 1f, SpriteEffects.None, 0f );
-            spriteBatch.DrawString( GameState.Instance.getFont( "large" ), "much shame", new Vector2( 900, 700 ), Color.Gold, -.6f, Vector2.Zero, 1f, SpriteEffects.None, 0f );
-            //spriteBatch.DrawString( GameState.Instance.getFont( "large" ), "uno doge", new Vector2( 620, 350 ), first, 0f, new Vector2(), 1f, SpriteEffects.None, .1f );
+            spriteBatch.DrawString( GameState.Instance.getFont( "large" ), "much shame", new Vector2( 900, 700 ), Color.LawnGreen, -.6f, Vector2.Zero, 1f, SpriteEffects.None, 0f );
         }
 
 
@@ -588,7 +572,7 @@ namespace DogePong
                 //create a new ball every 5 seconds
                 if ( elapsedTime % 5 == 0 )
                 {
-                    GameState.Instance.spawnBall( neutralSpawningPoint );
+                    GameState.Instance.spawnBall( null );
                 }
 
                 //create a new text item every second

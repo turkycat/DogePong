@@ -22,3 +22,4 @@ Content\Sounds\boop0.xnb
 Content\Sounds\boop1.xnb
 Content\Sounds\port0.xnb
 Content\Sounds\port1.xnb
+Content\Sounds\pew.xnb

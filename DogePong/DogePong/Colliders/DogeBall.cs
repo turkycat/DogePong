@@ -12,6 +12,7 @@ namespace DogePong
     {
         public double lastTeleport;
         public double lastCollision;
+        public Player owner;
 
 #region Constructors
 

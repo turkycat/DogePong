@@ -66,20 +66,25 @@ namespace DogePong.Controllers
                     speech.Add( new SemanticResultValue( "begin", "START" ) );
                     speech.Add( new SemanticResultValue( "start", "START" ) );
                     speech.Add( new SemanticResultValue( "reset", "RESET" ) );
-                    speech.Add( new SemanticResultValue( "single player", "ONEPLAYER" ) );
+
                     speech.Add( new SemanticResultValue( "pause", "PAUSE" ) );
+                    speech.Add( new SemanticResultValue( "resume", "UNPAUSE" ) );
                     speech.Add( new SemanticResultValue( "unpause", "UNPAUSE" ) );
+
+                    speech.Add( new SemanticResultValue( "single player", "ONEPLAYER" ) );
                     speech.Add( new SemanticResultValue( "two player", "TWOPLAYERS" ) );
                     speech.Add( new SemanticResultValue( "uno dos", "ONEPLAYER" ) );
                     speech.Add( new SemanticResultValue( "uno doges", "ONEPLAYER" ) );
                     speech.Add( new SemanticResultValue( "dos doges", "TWOPLAYERS" ) );
                     speech.Add( new SemanticResultValue( "dos dos", "TWOPLAYERS" ) );
+
                     speech.Add( new SemanticResultValue( "disable", "DISABLE" ) );
                     speech.Add( new SemanticResultValue( "kinect disable", "DISABLE" ) );
                     speech.Add( new SemanticResultValue( "connect disable", "DISABLE" ) );
                     speech.Add( new SemanticResultValue( "enable", "ENABLE" ) );
                     speech.Add( new SemanticResultValue( "kinect enable", "ENABLE" ) );
                     speech.Add( new SemanticResultValue( "connect enable", "ENABLE" ) );
+
                     speech.Add( new SemanticResultValue( "exit", "QUIT" ) );
                     speech.Add( new SemanticResultValue( "quit", "QUIT" ) );
 
@@ -171,11 +176,17 @@ namespace DogePong.Controllers
                         break;
 
                     case "ENABLE":
-                        GameState.Instance.KinectEnabled = true;
+                        if ( GameState.Instance.State == State.MENU )
+                        {
+                            GameState.Instance.KinectEnabled = true;
+                        }
                         break;
 
                     case "DISABLE":
-                        GameState.Instance.KinectEnabled = false;
+                        if ( GameState.Instance.State == State.MENU )
+                        {
+                            GameState.Instance.KinectEnabled = false;
+                        }
                         break;
 
                     case "PAUSE":
@@ -208,7 +219,7 @@ namespace DogePong.Controllers
                         break;
 
                     case "QUIT":
-                        if( GameState.Instance.KinectEnabled )
+                        if( GameState.Instance.State != State.PLAYING )
                             base.Game.Exit();
                         break;
                 }
