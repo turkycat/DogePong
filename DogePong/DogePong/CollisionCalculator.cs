@@ -7,6 +7,9 @@ using Microsoft.Xna.Framework;
 
 namespace DogePong
 {
+/**
+ * wow such comment
+ */
     class CollisionCalculator
     {
         //a collection of CollisionEvent objects to sort by time and process
